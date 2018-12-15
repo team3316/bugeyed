@@ -47,11 +47,15 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+    static {
+        if (BuildConfig.DEBUG) {
+        }
+        System.loadLibrary("opencv_java3");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        System.loadLibrary("opencv_java3");
 
         // Setup fullscreen layout
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -68,7 +72,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void call(PermissionsResult permissionsResult) {
                         if (permissionsResult.isGranted()) {
-                            _cameraView = (JavaCamera2View) findViewById(R.id.camera_view);
+                            _cameraView = findViewById(R.id.camera_view);
                             _cameraView.setVisibility(SurfaceView.VISIBLE);
                             _cameraView.setCvCameraViewListener(_this);
                             _cameraView.setFocusableInTouchMode(false);

@@ -3,8 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BugEyed.iml" filepath="$PROJECT_DIR$/BugEyed.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android-opencv/android-opencv.iml" filepath="$PROJECT_DIR$/android-opencv/android-opencv.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/openCVLibrary344/openCVLibrary344.iml" filepath="$PROJECT_DIR$/openCVLibrary344/openCVLibrary344.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android-opencv/opencv/opencv.iml" filepath="$PROJECT_DIR$/android-opencv/opencv/opencv.iml" />
     </modules>
   </component>
 </project>
