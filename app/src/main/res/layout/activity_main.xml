@@ -17,17 +17,10 @@
         opencv:show_fps="true"
         opencv:camera_id="any" />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:gravity="center">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/calibrate"
-            style="@style/Widget.AppCompat.Button.Colored"/>
-
-    </LinearLayout>
+        android:id="@+id/fragmentHolder">
+    </FrameLayout>
 </FrameLayout>
