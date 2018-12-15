@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity
 
         // Setup fullscreen layout
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(this.getSupportActionBar()).hide();
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_main);
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_3_0, this, this._loaderCallback);
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0, this, this._loaderCallback);
         } else {
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             this._loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
