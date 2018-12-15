@@ -1,18 +1,23 @@
 package com.team3316.bugeyed;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.team3316.bugeyed.fragments.MenuFragment;
 
 import net.ralphpina.permissionsmanager.PermissionsManager;
 import net.ralphpina.permissionsmanager.PermissionsResult;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
+import org.opencv.android.JavaCamera2View;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
@@ -26,7 +31,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "BUGEYED";
 
-    private JavaCameraView _cameraView;
+    private JavaCamera2View _cameraView;
 
     private BaseLoaderCallback _loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -63,13 +68,17 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void call(PermissionsResult permissionsResult) {
                         if (permissionsResult.isGranted()) {
-                            _cameraView = (JavaCameraView) findViewById(R.id.camera_view);
+                            _cameraView = (JavaCamera2View) findViewById(R.id.camera_view);
                             _cameraView.setVisibility(SurfaceView.VISIBLE);
                             _cameraView.setCvCameraViewListener(_this);
+                            _cameraView.setFocusableInTouchMode(false);
+                            _cameraView.setFocusable(false);
                             _cameraView.enableView();
                         }
                     }
                 });
+
+        this.setFragment(new MenuFragment());
     }
 
     @Override
@@ -104,5 +113,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         return inputFrame.rgba();
+    }
+
+    public void setFragment (Fragment fragment) {
+        FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentHolder, fragment);
+        transaction.commit();
+
+        if (!(fragment instanceof MenuFragment)) // Main menu shouldn't disappear on back
+            transaction.addToBackStack(null);
     }
 }
