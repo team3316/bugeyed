@@ -17,7 +17,7 @@ import net.ralphpina.permissionsmanager.PermissionsResult;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCamera2View;
+import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "BUGEYED";
 
-    private JavaCamera2View _cameraView;
+    private JavaCameraView _cameraView;
 
     private BaseLoaderCallback _loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, this._loaderCallback);
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_3_0, this, this._loaderCallback);
         } else {
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             this._loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);

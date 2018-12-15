@@ -7,4 +7,4 @@ message(STATUS "OpenCV Libraries: ${OpenCV_LIBS}")
 add_library(libdbugcv SHARED src/main/jni/libdbugcv.cpp)
 
 find_library(log-lib log)
-target_link_libraries(libdbugcv ${log-lib} lib_opencv ${OpenCV_LIBS})
+target_link_libraries(libdbugcv ${log-lib} ${OpenCV_LIBS})
