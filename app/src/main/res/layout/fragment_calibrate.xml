@@ -44,6 +44,7 @@
                 android:progressTint="@color/colorPrimaryDark"
                 android:id="@+id/hMaxSlide"
                 android:max="255"
+                android:progress="255"
                 style="@style/Widget.AppCompat.SeekBar" />
         </LinearLayout>
     </LinearLayout>
@@ -87,6 +88,7 @@
                 android:progressTint="@color/colorPrimaryDark"
                 android:id="@+id/sMaxSlide"
                 android:max="255"
+                android:progress="255"
                 style="@style/Widget.AppCompat.SeekBar" />
         </LinearLayout>
     </LinearLayout>
@@ -130,6 +132,7 @@
                 android:progressTint="@color/colorPrimaryDark"
                 android:id="@+id/vMaxSlide"
                 android:max="255"
+                android:progress="255"
                 style="@style/Widget.AppCompat.SeekBar" />
         </LinearLayout>
     </LinearLayout>

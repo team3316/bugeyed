@@ -22,6 +22,24 @@ public class DBugPrefrences {
     private HashMap<String, Integer> _prefrencesMap;
 
     private DBugPrefrences() {
-        _sharedPrefrences = DBugApplication.getContext().getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
+        this._sharedPrefrences = DBugApplication
+            .getContext()
+            .getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
+
+        this._prefrencesMap = new HashMap<>();
+    }
+
+    public int get(String key, int defaultValue) {
+        try {
+           return this._sharedPrefrences.getInt(key, this._prefrencesMap.get(key));
+        } catch (NullPointerException e) {
+            this.set(key, defaultValue);
+            return defaultValue;
+        }
+    }
+
+    public void set(String key, int value) {
+        this._prefrencesMap.put(key, value);
+        this._sharedPrefrences.edit().putInt(key, value).commit();
     }
 }

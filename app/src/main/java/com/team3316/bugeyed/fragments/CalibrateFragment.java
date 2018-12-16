@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 
+import com.team3316.bugeyed.DBugPrefrences;
 import com.team3316.bugeyed.R;
 
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class CalibrateFragment extends Fragment implements SeekBar.OnSeekBarChan
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         String name = this._sliders.get(seekBar.getId());
-        Log.d("CalibrateFragment", name + " value changed to: " + progress);
+        DBugPrefrences.getInstance().set(name + "-value", progress);
     }
 
     @Override

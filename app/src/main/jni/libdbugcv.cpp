@@ -18,19 +18,18 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     jclass type,
     jint texOut,
     jint width,
-    jint height
+    jint height,
+    jint hMin, jint hMax, jint sMin, jint sMax, jint vMin, jint vMax
 ) {
     LOGD("Image is %d x %d", width, height);
+    LOGD("H: [%d, %d], S: [%d, %d], V: [%d, %d]", hMin, hMax, sMin, sMax, vMin, vMax);
 
-    static Mat input, grayscale, output;
+    static Mat input;
     input.create(height, width, CV_8UC4);
 
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, input.data);
 
-    cvtColor(input, grayscale, CV_RGBA2GRAY);
-    cvtColor(grayscale, output, CV_GRAY2RGBA);
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texOut);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, output.data);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, input.data);
 }

@@ -76,7 +76,14 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
             this._lastNanoTime = System.nanoTime();
         }
 
-        DBugNativeBridge.processFrame(texOut, width, height);
+        int hMin = DBugPrefrences.getInstance().get("h-min-value", 0),
+            hMax = DBugPrefrences.getInstance().get("h-max-value", 255),
+            sMin = DBugPrefrences.getInstance().get("s-min-value", 0),
+            sMax = DBugPrefrences.getInstance().get("s-max-value", 255),
+            vMin = DBugPrefrences.getInstance().get("v-min-value", 0),
+            vMax = DBugPrefrences.getInstance().get("v-max-value", 255);
+
+        DBugNativeBridge.processFrame(texOut, width, height, hMin, hMax, sMin, sMax, vMin, vMax);
         return true;
     }
 }
