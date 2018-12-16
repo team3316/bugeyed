@@ -4,4 +4,5 @@
     <string name="match_vision">Match Vision</string>
     <string name="h_min">H Min</string>
     <string name="h_max">H Max</string>
+    <string name="no_perm_text">BugEyed needs access to the camera in order to work. Please allow the camera access from the settings and restart the app.</string>
 </resources>

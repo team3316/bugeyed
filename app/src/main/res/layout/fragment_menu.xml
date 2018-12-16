@@ -9,12 +9,14 @@
         android:layout_height="wrap_content"
         android:text="@string/calibrate"
         android:id="@+id/calibrateButton"
+        android:backgroundTint="@color/colorPrimary"
         style="@style/Widget.AppCompat.Button.Colored"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/match_vision"
+        android:backgroundTint="@color/colorPrimary"
         style="@style/Widget.AppCompat.Button.Colored"/>
 
 </LinearLayout>
