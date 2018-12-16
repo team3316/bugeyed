@@ -16,11 +16,9 @@ JNIEXPORT void JNICALL
 Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     JNIEnv *env,
     jclass type,
-    jint texIn,
     jint texOut,
     jint width,
-    jint height,
-    long system_time_millis
+    jint height
 ) {
     LOGD("Image is %d x %d", width, height);
 
@@ -34,5 +32,5 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texOut);
-    glTexImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, output.data);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, output.data);
 }

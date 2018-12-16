@@ -20,4 +20,14 @@
         android:layout_gravity="bottom"
         android:id="@+id/fragmentHolder">
     </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/fpsTextView" />
 </FrameLayout>

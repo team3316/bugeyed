@@ -6,5 +6,5 @@ public class DBugNativeBridge {
         System.loadLibrary("libdbugcv");
     }
 
-    public static native void processFrame(int texIn, int texOut, int width, int height, long system_time_millis);
+    public static native void processFrame(int texOut, int width, int height);
 }
