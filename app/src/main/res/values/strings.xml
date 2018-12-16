@@ -2,7 +2,13 @@
     <string name="app_name">BugEyed</string>
     <string name="calibrate">Calibrate</string>
     <string name="match_vision">Match Vision</string>
+    <string name="done">Done</string>
+    <string name="back">Back</string>
     <string name="h_min">H Min</string>
     <string name="h_max">H Max</string>
+    <string name="s_min">S Min</string>
+    <string name="s_max">S Max</string>
+    <string name="v_min">V Min</string>
+    <string name="v_max">V Max</string>
     <string name="no_perm_text">BugEyed needs access to the camera in order to work. Please allow the camera access from the settings and restart the app.</string>
 </resources>

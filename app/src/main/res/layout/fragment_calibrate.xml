@@ -7,7 +7,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -22,6 +23,8 @@
                 android:layout_height="wrap_content"
                 android:thumbTint="@color/colorPrimary"
                 android:progressTint="@color/colorPrimaryDark"
+                android:id="@+id/hMinSlide"
+                android:max="255"
                 style="@style/Widget.AppCompat.SeekBar" />
         </LinearLayout>
 
@@ -39,8 +42,118 @@
                 android:layout_height="wrap_content"
                 android:thumbTint="@color/colorPrimary"
                 android:progressTint="@color/colorPrimaryDark"
+                android:id="@+id/hMaxSlide"
+                android:max="255"
                 style="@style/Widget.AppCompat.SeekBar" />
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="@string/s_min" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:thumbTint="@color/colorPrimary"
+                android:progressTint="@color/colorPrimaryDark"
+                android:id="@+id/sMinSlide"
+                android:max="255"
+                style="@style/Widget.AppCompat.SeekBar" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="@string/s_max" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:thumbTint="@color/colorPrimary"
+                android:progressTint="@color/colorPrimaryDark"
+                android:id="@+id/sMaxSlide"
+                android:max="255"
+                style="@style/Widget.AppCompat.SeekBar" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="@string/v_min" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:thumbTint="@color/colorPrimary"
+                android:progressTint="@color/colorPrimaryDark"
+                android:id="@+id/vMinSlide"
+                android:max="255"
+                style="@style/Widget.AppCompat.SeekBar" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="@string/v_max" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:thumbTint="@color/colorPrimary"
+                android:progressTint="@color/colorPrimaryDark"
+                android:id="@+id/vMaxSlide"
+                android:max="255"
+                style="@style/Widget.AppCompat.SeekBar" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="5dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back"
+            android:id="@+id/backButton"
+            android:backgroundTint="@color/colorPrimary"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/done"
+            android:id="@+id/doneButton"
+            android:backgroundTint="@color/colorPrimary"
+            style="@style/Widget.AppCompat.Button.Colored"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -11,12 +11,12 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
     private static BetterCamera2Renderer.Settings getSettings() {
         BetterCamera2Renderer.Settings settings = new BetterCamera2Renderer.Settings();
 
-        settings.width = 640;
-        settings.height = 480;
+        settings.width = 1920;
+        settings.height = 1080;
 
         settings.add(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
-        settings.add(CaptureRequest.LENS_FOCUS_DISTANCE, .2f);
-        settings.add(CaptureRequest.SENSOR_EXPOSURE_TIME, 1000000L);
+        settings.add(CaptureRequest.LENS_FOCUS_DISTANCE, 5.0f);
+        settings.add(CaptureRequest.SENSOR_EXPOSURE_TIME, 10000000L);
 
         return settings;
     }

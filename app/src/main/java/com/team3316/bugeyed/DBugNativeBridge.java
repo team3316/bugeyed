@@ -6,8 +6,5 @@ public class DBugNativeBridge {
         System.loadLibrary("libdbugcv");
     }
 
-    public static native int initGL();
-    public static native void closeGL();
-    public static native void drawFrame();
-    public static native void changeSize(int width, int height);
+    public static native void processFrame(int texIn, int texOut, int width, int height, long system_time_millis);
 }
