@@ -9,13 +9,10 @@
     android:orientation="horizontal"
     tools:context=".MainActivity">
 
-    <org.opencv.android.JavaCameraView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="visible"
-        android:id="@+id/camera_view"
-        opencv:show_fps="true"
-        opencv:camera_id="any" />
+    <com.team3316.bugeyed.DBugGLSurfaceView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/cameraView" />
 
     <FrameLayout
         android:layout_width="match_parent"
