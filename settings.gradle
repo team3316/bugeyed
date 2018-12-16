@@ -1,2 +1,2 @@
 include ':app'
-include ':android-opencv:opencv'
+include ':openCVLibrary343'
