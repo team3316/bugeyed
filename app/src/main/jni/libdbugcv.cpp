@@ -48,8 +48,17 @@ vector<RotatedRect> filterContours(PolygonArray contours) {
 }
 
 void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
-    static Scalar color = Scalar(0.0, 255.0, 0.0, 255.0);
-    for_each(filtered.begin(), filtered.end(), [&output] (RotatedRect rect) {
+    static Scalar green = Scalar(0.0, 255.0, 0.0, 255.0);
+    static Scalar magenta = Scalar(255.0, 0.0, 255.0, 255.0);
+    static Scalar blue = Scalar(0.0, 0.0, 255.0, 255.0);
+
+    Point center = {
+        output.cols / 2,
+        output.rows / 2
+    };
+    circle(output, center, 2, magenta);
+
+    for_each(filtered.begin(), filtered.end(), [&output, &center] (RotatedRect rect) {
         Point2f vertices2f[4];
         rect.points(vertices2f);
 
@@ -58,12 +67,14 @@ void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
             vertices[i] = vertices2f[i];
         }
 
-        line(output, vertices[0], vertices[1], color);
-        line(output, vertices[1], vertices[2], color);
-        line(output, vertices[2], vertices[3], color);
-        line(output, vertices[3], vertices[0], color);
+        line(output, vertices[0], vertices[1], green);
+        line(output, vertices[1], vertices[2], green);
+        line(output, vertices[2], vertices[3], green);
+        line(output, vertices[3], vertices[0], green);
 
-        circle(output, rect.center, 2, color);
+        circle(output, rect.center, 2, green);
+
+        line(output, rect.center, center, blue);
     });
 }
 
