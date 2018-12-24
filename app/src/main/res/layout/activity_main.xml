@@ -21,13 +21,28 @@
         android:id="@+id/fragmentHolder">
     </FrameLayout>
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:textColor="@color/colorPrimary"
-        android:id="@+id/fpsTextView" />
+        android:layout_marginTop="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/fpsTextView" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:textColor="#fff"
+            android:buttonTint="@color/colorPrimary"
+            android:layout_margin="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_contours"
+            android:id="@+id/contoursCheckbox" />
+    </LinearLayout>
 </FrameLayout>

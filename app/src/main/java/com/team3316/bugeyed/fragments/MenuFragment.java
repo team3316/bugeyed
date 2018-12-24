@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.team3316.bugeyed.DBugNativeBridge;
 import com.team3316.bugeyed.MainActivity;
+import com.team3316.bugeyed.PreviewType;
 import com.team3316.bugeyed.R;
 
 public class MenuFragment extends Fragment {
@@ -21,7 +23,7 @@ public class MenuFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Button btn = (Button) view.findViewById(R.id.calibrateButton);
+        Button btn = view.findViewById(R.id.calibrateButton);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -29,5 +31,13 @@ public class MenuFragment extends Fragment {
                 activity.setFragment(new CalibrateFragment());
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ((MainActivity) this.getActivity()).setPreviewType(PreviewType.CAMERA);
+        DBugNativeBridge.setPreviewType(PreviewType.CAMERA);
     }
 }

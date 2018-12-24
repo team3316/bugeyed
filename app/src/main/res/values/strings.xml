@@ -11,4 +11,5 @@
     <string name="v_min">V Min</string>
     <string name="v_max">V Max</string>
     <string name="no_perm_text">BugEyed needs access to the camera in order to work. Please allow the camera access from the settings and restart the app.</string>
+    <string name="show_contours">Show Contours</string>
 </resources>

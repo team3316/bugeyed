@@ -5,9 +5,14 @@ import android.app.FragmentTransaction;
 import android.hardware.camera2.CaptureRequest;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 
+import com.team3316.bugeyed.fragments.CalibrateFragment;
 import com.team3316.bugeyed.fragments.MenuFragment;
 
 import net.ralphpina.permissionsmanager.PermissionsManager;
@@ -17,10 +22,11 @@ import org.opencv.android.BetterCamera2Renderer;
 
 import rx.functions.Action1;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "BUGEYED";
 
     private DBugGLSurfaceView _view;
+    private PreviewType _currentPreviewType = PreviewType.CAMERA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +53,15 @@ public class MainActivity extends AppCompatActivity {
                             _view = findViewById(R.id.cameraView);
                             _view.setCameraTextureListener(_view);
 
+                            AppCompatCheckBox checkBox = findViewById(R.id.contoursCheckbox);
+                            checkBox.setOnClickListener((View.OnClickListener) ctx);
+
                             setFragment(new MenuFragment());
                         } else {
                             setContentView(R.layout.activity_no_perm);
                         }
                     }
                 });
-
     }
 
     @Override
@@ -70,12 +78,24 @@ public class MainActivity extends AppCompatActivity {
             this._view.onResume();
     }
 
-    public void setFragment (Fragment fragment) {
+    public void setFragment(Fragment fragment) {
         FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentHolder, fragment);
         transaction.commit();
 
         if (!(fragment instanceof MenuFragment)) // Main menu shouldn't disappear on back
             transaction.addToBackStack(null);
+    }
+
+    public void setPreviewType (PreviewType p) {
+        this._currentPreviewType = p;
+    }
+
+    @Override
+    public void onClick(View v) {
+        // TODO - Add a preview type selection
+        boolean checked = ((AppCompatCheckBox) v).isChecked();
+        PreviewType p = this._currentPreviewType.contoursFlag(checked);
+        DBugNativeBridge.setPreviewType(p);
     }
 }

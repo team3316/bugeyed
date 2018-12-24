@@ -2,29 +2,28 @@ package com.team3316.bugeyed;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.util.HashMap;
 
-public class DBugPrefrences {
+public class DBugPreferences {
     /*
      * Singleton stuff
      */
-    private static DBugPrefrences _prefrences;
-    public static DBugPrefrences getInstance() {
+    private static DBugPreferences _prefrences;
+    public static DBugPreferences getInstance() {
         if (_prefrences == null)
-            _prefrences = new DBugPrefrences();
+            _prefrences = new DBugPreferences();
         return _prefrences;
     }
 
-    private static final String PREFERENCE_FILE_KEY = "com.team3316.bugeyed.PREFERENCE_FILE_KEY";
 
     private SharedPreferences _sharedPrefrences;
     private HashMap<String, Integer> _prefrencesMap;
 
-    private DBugPrefrences() {
-        this._sharedPrefrences = DBugApplication
-            .getContext()
-            .getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
+    private DBugPreferences() {
+        this._sharedPrefrences = PreferenceManager.getDefaultSharedPreferences(DBugApplication.getContext());
 
         this._prefrencesMap = new HashMap<>();
     }
@@ -33,6 +32,7 @@ public class DBugPrefrences {
         try {
            return this._sharedPrefrences.getInt(key, this._prefrencesMap.get(key));
         } catch (NullPointerException e) {
+            Log.d(this.getClass().getName(), "Item " + key + " not in preferences");
             this.set(key, defaultValue);
             return defaultValue;
         }
@@ -40,6 +40,6 @@ public class DBugPrefrences {
 
     public void set(String key, int value) {
         this._prefrencesMap.put(key, value);
-        this._sharedPrefrences.edit().putInt(key, value).commit();
+        this._sharedPrefrences.edit().putInt(key, value).apply();
     }
 }
