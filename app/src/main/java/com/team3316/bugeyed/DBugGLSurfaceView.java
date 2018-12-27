@@ -5,6 +5,7 @@ import android.hardware.camera2.CaptureRequest;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.widget.TextView;
 
@@ -76,14 +77,16 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
             this._lastNanoTime = System.nanoTime();
         }
 
-        int hMin = DBugPreferences.getInstance().get("h-min-value", 0),
-            hMax = DBugPreferences.getInstance().get("h-max-value", 255),
-            sMin = DBugPreferences.getInstance().get("s-min-value", 0),
-            sMax = DBugPreferences.getInstance().get("s-max-value", 255),
-            vMin = DBugPreferences.getInstance().get("v-min-value", 0),
-            vMax = DBugPreferences.getInstance().get("v-max-value", 255);
+        int hMin = DBugPreferences.getInstance().get("h-min-value", 0, false),
+            hMax = DBugPreferences.getInstance().get("h-max-value", 255, false),
+            sMin = DBugPreferences.getInstance().get("s-min-value", 0, false),
+            sMax = DBugPreferences.getInstance().get("s-max-value", 255, false),
+            vMin = DBugPreferences.getInstance().get("v-min-value", 0, false),
+            vMax = DBugPreferences.getInstance().get("v-max-value", 255, false);
 
-        DBugNativeBridge.processFrame(texOut, width, height, hMin, hMax, sMin, sMax, vMin, vMax);
+        DBugTarget target = DBugNativeBridge.processFrame(texOut, width, height, hMin, hMax, sMin, sMax, vMin, vMax);
+        Log.d(this.getClass().getSimpleName(), "Azimuth angle: " + target.getAzimuthAngle());
+        Log.d(this.getClass().getSimpleName(), "Polar angle: " + target.getPolarAngle());
         return true;
     }
 }

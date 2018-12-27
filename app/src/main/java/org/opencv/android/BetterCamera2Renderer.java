@@ -18,6 +18,8 @@ import android.util.Size;
 import android.util.SizeF;
 import android.view.Surface;
 
+import com.team3316.bugeyed.DBugTarget;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -178,9 +180,16 @@ public class BetterCamera2Renderer extends BetterCameraGLRendererBase {
 
                 double focal_length_pixels = mSettings.width * focal_lengths[0] / width_dim;
                 mView.setFocalLengthPixels(focal_length_pixels);
+
+                double horFOV = 2 * Math.toDegrees(Math.atan(.5 * width_dim / focal_lengths[0]));
+                double vertFOV = 2 * Math.toDegrees(Math.atan(.5 * height_dim / focal_lengths[0]));
                 Log.d(LOGTAG, "Camera focal length (pixels): " + focal_length_pixels);
-                Log.d(LOGTAG, "Camera horizontal FOV (deg) " + 2 * Math.toDegrees(Math.atan(.5 * width_dim / focal_lengths[0])));
-                Log.d(LOGTAG, "Camera vertical FOV (deg) " + 2 * Math.toDegrees(Math.atan(.5 * height_dim / focal_lengths[0])));
+                Log.d(LOGTAG, "Camera horizontal FOV (deg) " + horFOV);
+                Log.d(LOGTAG, "Camera vertical FOV (deg) " + vertFOV);
+
+                DBugTarget.HORIZONTAL_FOV = horFOV;
+                DBugTarget.VERTICAL_FOV = vertFOV;
+
                 if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                     throw new RuntimeException(
                             "Time out waiting to lock camera opening.");

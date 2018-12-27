@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         transaction.replace(R.id.fragmentHolder, fragment);
         transaction.commit();
 
-        if (!(fragment instanceof MenuFragment)) // Main menu shouldn't disappear on back
+        if (fragment instanceof CalibrateFragment) // Only the calibrate menu should go back to the main menu
             transaction.addToBackStack(null);
     }
 

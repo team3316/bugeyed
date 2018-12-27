@@ -78,8 +78,15 @@ void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
     });
 }
 
+jobject createTargetObject (JNIEnv *env, double centerX, double centerY) {
+    jclass targetClass = env->FindClass("com/team3316/bugeyed/DBugTarget");
+    jmethodID init = env->GetMethodID(targetClass, "<init>", "(DD)V");
+
+    return env->NewObject(targetClass, init, centerX, centerY);
+}
+
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jobject JNICALL
 Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     JNIEnv *env,
     jclass type,
@@ -137,6 +144,9 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texOut);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, outputm.data);
+
+    Point center = filtered[0].center;
+    return createTargetObject(env, center.x, center.y);
 }
 
 extern "C"

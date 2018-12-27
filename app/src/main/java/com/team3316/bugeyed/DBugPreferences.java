@@ -1,6 +1,5 @@
 package com.team3316.bugeyed;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -28,18 +27,25 @@ public class DBugPreferences {
         this._prefrencesMap = new HashMap<>();
     }
 
-    public int get(String key, int defaultValue) {
+    public int get(String key, int defaultValue, boolean isInitializing) {
         try {
-           return this._sharedPrefrences.getInt(key, this._prefrencesMap.get(key));
+            if (isInitializing) {
+                this._prefrencesMap.put(key, defaultValue);
+                return this._sharedPrefrences.getInt(key, defaultValue);
+            }
+            return this._prefrencesMap.get(key);
         } catch (NullPointerException e) {
-            Log.d(this.getClass().getName(), "Item " + key + " not in preferences");
-            this.set(key, defaultValue);
             return defaultValue;
         }
     }
 
-    public void set(String key, int value) {
-        this._prefrencesMap.put(key, value);
-        this._sharedPrefrences.edit().putInt(key, value).apply();
+    public void set(String key, int value, boolean isDone) {
+        if (isDone) {
+            Log.d(this.getClass().getSimpleName(), "Setting " + key + " to " + value + " on device cache");
+            this._sharedPrefrences.edit().putInt(key, value).apply();
+        } else {
+            Log.d(this.getClass().getSimpleName(), "Setting " + key + " to " + value + " on hashmap cache");
+            this._prefrencesMap.put(key, value);
+        }
     }
 }

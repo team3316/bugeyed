@@ -23,12 +23,21 @@ public class MenuFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Button btn = view.findViewById(R.id.calibrateButton);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button calibrateButton = view.findViewById(R.id.calibrateButton);
+        calibrateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity activity = (MainActivity) getActivity();
                 activity.setFragment(new CalibrateFragment());
+            }
+        });
+
+        Button matchVisionButton = view.findViewById(R.id.matchVisionButton);
+        matchVisionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity activity = (MainActivity) getActivity();
+                activity.setFragment(new MatchVisionFragment());
             }
         });
     }

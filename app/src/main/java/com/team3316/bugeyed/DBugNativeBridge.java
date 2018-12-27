@@ -6,7 +6,7 @@ public class DBugNativeBridge {
         System.loadLibrary("libdbugcv");
     }
 
-    public static native void processFrame(int texOut, int width, int height, int hMin, int hMax,
+    public static native DBugTarget processFrame(int texOut, int width, int height, int hMin, int hMax,
                                            int sMin, int sMax, int vMin, int vMax);
     public static native void setPreviewType(PreviewType previewType);
 }

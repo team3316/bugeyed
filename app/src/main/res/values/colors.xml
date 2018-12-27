@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#ff8205</color>
     <color name="colorAccent">#000</color>
     <color name="colorAccentDark">#000</color>
+    <color name="not_connected">#a00</color>
+    <color name="connected">#0a0</color>
 </resources>
