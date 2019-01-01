@@ -10,6 +10,7 @@
 #include <opencv2/imgproc.hpp>
 #include "common.hpp"
 #include "libdbugcv.h"
+#include "libdbugudp.h"
 
 using namespace cv;
 using namespace std;
@@ -145,9 +146,10 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     glBindTexture(GL_TEXTURE_2D, texOut);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, outputm.data);
 
-    LOGD("Found %d contours", filtered.size());
+    LOGD("Found %lu contours", filtered.size());
 
     if (filtered.size() > 0) {
+        sendMessage("Found contours");
         Point center = filtered[0].center;
         return createTargetObject(env, width, height, center.x, center.y);
     }

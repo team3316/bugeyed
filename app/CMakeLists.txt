@@ -9,7 +9,12 @@ set_target_properties(
     $ENV{OPENCV_JNI_INCLUDE_DIR}/../../libs/${CMAKE_ANDROID_ARCH_ABI}/libopencv_java3.so
 )
 
-add_library(libdbugcv SHARED src/main/jni/libdbugcv.cpp)
+add_library(
+    libdbugcv
+    SHARED
+    src/main/jni/libdbugcv.cpp
+    src/main/jni/libdbugudp.cpp
+)
 
 target_link_libraries(
     libdbugcv
