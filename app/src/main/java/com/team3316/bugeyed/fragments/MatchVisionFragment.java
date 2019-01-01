@@ -1,8 +1,11 @@
 package com.team3316.bugeyed.fragments;
 
 import android.app.Fragment;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +26,16 @@ public class MatchVisionFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Button connectedButton = view.findViewById(R.id.matchVisionButton);
-        connectedButton.setOnLongClickListener(new View.OnLongClickListener () {
+        Button connectedButton = view.findViewById(R.id.connectedButton);
+        int notConnectedColor = ContextCompat.getColor(this.getContext(), R.color.not_connected);
+        connectedButton.getBackground().setColorFilter(notConnectedColor, PorterDuff.Mode.DARKEN);
+        connectedButton.setText(R.string.not_connected);
+
+        connectedButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Log.d(getClass().getSimpleName(), "TODO: Implement back to menu screen");
-                return false;
+                Log.d(getClass().getSimpleName(), "onlongclick");
+                return true;
             }
         });
     }
@@ -37,7 +44,7 @@ public class MatchVisionFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        ((MainActivity) getActivity()).setPreviewType(PreviewType.MATCH);
+        ((MainActivity) this.getActivity()).setPreviewType(PreviewType.MATCH);
         DBugNativeBridge.setPreviewType(PreviewType.MATCH);
     }
 }
