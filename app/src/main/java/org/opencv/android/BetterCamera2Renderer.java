@@ -18,7 +18,7 @@ import android.util.Size;
 import android.util.SizeF;
 import android.view.Surface;
 
-import com.team3316.bugeyed.DBugTarget;
+import com.team3316.bugeyed.DBugNativeBridge;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -187,8 +187,7 @@ public class BetterCamera2Renderer extends BetterCameraGLRendererBase {
                 Log.d(LOGTAG, "Camera horizontal FOV (deg) " + horFOV);
                 Log.d(LOGTAG, "Camera vertical FOV (deg) " + vertFOV);
 
-                DBugTarget.HORIZONTAL_FOV = horFOV;
-                DBugTarget.VERTICAL_FOV = vertFOV;
+                DBugNativeBridge.setFOVData(horFOV, vertFOV);
 
                 if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                     throw new RuntimeException(

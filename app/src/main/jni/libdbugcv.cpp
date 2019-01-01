@@ -20,6 +20,8 @@ using Polygon = vector<Point>;
 using PolygonArray = vector<Polygon>;
 
 static PreviewType ptype = CAMERA;
+static double horizontalFOV = ERROR_CONSTANT;
+static double verticalFOV = ERROR_CONSTANT;
 
 // Taken from the iOS version
 bool shouldFilterContour(int numOfPoints, double area, double ratio, Polygon convex) {
@@ -79,15 +81,21 @@ void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
     });
 }
 
-jobject createTargetObject (JNIEnv *env, int width, int height, double centerX, double centerY) {
-    jclass targetClass = env->FindClass("com/team3316/bugeyed/DBugTarget");
-    jmethodID init = env->GetMethodID(targetClass, "<init>", "(DDDD)V");
+double percentageOfAngle (double inner, double outer, double fov) {
+    double percentage = (inner / outer) - 0.5; // Percentage out of half of the screen
+    return percentage * fov;
+}
 
-    return env->NewObject(targetClass, init, (double) width, (double) height, centerX, centerY);
+void sendTargetData (Point centroid, int width, int height) {
+    double azimuth = percentageOfAngle(centroid.x, width, horizontalFOV);
+    double polar = percentageOfAngle(centroid.y, height, verticalFOV);
+
+    string message = "[" + to_string(azimuth) + ", " + to_string(polar) + "]";
+    sendMessage(message);
 }
 
 extern "C"
-JNIEXPORT jobject JNICALL
+JNIEXPORT void JNICALL
 Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     JNIEnv *env,
     jclass type,
@@ -149,12 +157,10 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     LOGD("Found %lu contours", filtered.size());
 
     if (filtered.size() > 0) {
-        sendMessage("Found contours");
+        LOGD("Sending biggest contour's data");
         Point center = filtered[0].center;
-        return createTargetObject(env, width, height, center.x, center.y);
+        sendTargetData(center, width, height);
     }
-
-    return createTargetObject(env, ERROR_CONSTANT, ERROR_CONSTANT, ERROR_CONSTANT, ERROR_CONSTANT);
 }
 
 extern "C"
@@ -193,4 +199,16 @@ Java_com_team3316_bugeyed_DBugNativeBridge_sendData(
                      + to_string((double) polar)
                      + "}";
     sendMessage(message);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_team3316_bugeyed_DBugNativeBridge_setFOVData(
+    JNIEnv *env,
+    jclass type,
+    jdouble horizontal,
+    jdouble vertical
+) {
+    horizontalFOV = (double) horizontal;
+    verticalFOV = (double) vertical;
 }

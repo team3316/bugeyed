@@ -84,11 +84,7 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
             vMin = DBugPreferences.getInstance().get("v-min-value", 0, false),
             vMax = DBugPreferences.getInstance().get("v-max-value", 255, false);
 
-        DBugTarget target = DBugNativeBridge.processFrame(texOut, width, height, hMin, hMax, sMin, sMax, vMin, vMax);
-        Log.d(this.getClass().getSimpleName(), "Azimuth angle: " + target.getAzimuthAngle());
-        Log.d(this.getClass().getSimpleName(), "Polar angle: " + target.getPolarAngle());
-
-        DBugNativeBridge.sendData(target.getAzimuthAngle(), target.getPolarAngle());
+        DBugNativeBridge.processFrame(texOut, width, height, hMin, hMax, sMin, sMax, vMin, vMax);
         return true;
     }
 }
