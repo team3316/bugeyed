@@ -13,6 +13,8 @@
 #define MIN_HEIGHT_WIDTH_RATIO 0
 #define MAX_HEIGHT_WIDTH_RATIO 10
 
+#define ERROR_CONSTANT -3316.0
+
 typedef enum {
     CAMERA,
     CAMERA_EXTRA,

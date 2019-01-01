@@ -145,8 +145,14 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     glBindTexture(GL_TEXTURE_2D, texOut);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, outputm.data);
 
-    Point center = filtered[0].center;
-    return createTargetObject(env, width, height, center.x, center.y);
+    LOGD("Found %d contours", filtered.size());
+
+    if (filtered.size() > 0) {
+        Point center = filtered[0].center;
+        return createTargetObject(env, width, height, center.x, center.y);
+    }
+
+    return createTargetObject(env, ERROR_CONSTANT, ERROR_CONSTANT, ERROR_CONSTANT, ERROR_CONSTANT);
 }
 
 extern "C"
