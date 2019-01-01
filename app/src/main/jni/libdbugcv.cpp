@@ -178,3 +178,19 @@ Java_com_team3316_bugeyed_DBugNativeBridge_setPreviewType(
     if (strcmp(valueNative, "CONTOURS") == 0) ptype = CONTOURS;
     if (strcmp(valueNative, "MATCH") == 0) ptype = MATCH;
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_team3316_bugeyed_DBugNativeBridge_sendData(
+    JNIEnv *env,
+    jclass type,
+    jdouble azimuth,
+    jdouble polar
+) {
+    string message = "{\"azimuth\":"
+                     + to_string((double) azimuth)
+                     + ", \"polar\":"
+                     + to_string((double) polar)
+                     + "}";
+    sendMessage(message);
+}

@@ -87,6 +87,8 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
         DBugTarget target = DBugNativeBridge.processFrame(texOut, width, height, hMin, hMax, sMin, sMax, vMin, vMax);
         Log.d(this.getClass().getSimpleName(), "Azimuth angle: " + target.getAzimuthAngle());
         Log.d(this.getClass().getSimpleName(), "Polar angle: " + target.getPolarAngle());
+
+        DBugNativeBridge.sendData(target.getAzimuthAngle(), target.getPolarAngle());
         return true;
     }
 }
