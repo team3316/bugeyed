@@ -44,5 +44,14 @@
             android:layout_height="wrap_content"
             android:text="@string/show_contours"
             android:id="@+id/contoursCheckbox" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:textColor="#fff"
+            android:buttonTint="@color/colorPrimary"
+            android:layout_margin="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_data"
+            android:id="@+id/networkCheckbox" />
     </LinearLayout>
 </FrameLayout>

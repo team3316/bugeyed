@@ -22,6 +22,7 @@ using PolygonArray = vector<Polygon>;
 static PreviewType ptype = CAMERA;
 static double horizontalFOV = ERROR_CONSTANT;
 static double verticalFOV = ERROR_CONSTANT;
+static bool shouldSendData = false;
 
 // Taken from the iOS version
 bool shouldFilterContour(int numOfPoints, double area, double ratio, Polygon convex) {
@@ -156,7 +157,7 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
 
     LOGD("Found %lu contours", filtered.size());
 
-    if (filtered.size() > 0) {
+    if (filtered.size() > 0 && shouldSendData) {
         LOGD("Sending biggest contour's data");
         Point center = filtered[0].center;
         sendTargetData(center, width, height);
@@ -187,22 +188,6 @@ Java_com_team3316_bugeyed_DBugNativeBridge_setPreviewType(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_team3316_bugeyed_DBugNativeBridge_sendData(
-    JNIEnv *env,
-    jclass type,
-    jdouble azimuth,
-    jdouble polar
-) {
-    string message = "{\"azimuth\":"
-                     + to_string((double) azimuth)
-                     + ", \"polar\":"
-                     + to_string((double) polar)
-                     + "}";
-    sendMessage(message);
-}
-
-extern "C"
-JNIEXPORT void JNICALL
 Java_com_team3316_bugeyed_DBugNativeBridge_setFOVData(
     JNIEnv *env,
     jclass type,
@@ -211,4 +196,14 @@ Java_com_team3316_bugeyed_DBugNativeBridge_setFOVData(
 ) {
     horizontalFOV = (double) horizontal;
     verticalFOV = (double) vertical;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_team3316_bugeyed_DBugNativeBridge_setNetworkEnable(
+    JNIEnv *env,
+    jclass type,
+    jboolean status
+) {
+    shouldSendData = (bool) status;
 }

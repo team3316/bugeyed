@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // Permission handling
-        final AppCompatActivity ctx = this;
+        final MainActivity ctx = this;
         PermissionsManager.get()
                 .requestCameraPermission()
                 .subscribe(new Action1<PermissionsResult>() {
@@ -53,8 +53,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             _view = findViewById(R.id.cameraView);
                             _view.setCameraTextureListener(_view);
 
-                            AppCompatCheckBox checkBox = findViewById(R.id.contoursCheckbox);
-                            checkBox.setOnClickListener((View.OnClickListener) ctx);
+                            AppCompatCheckBox contoursCB = findViewById(R.id.contoursCheckbox);
+                            contoursCB.setOnClickListener(ctx);
+
+                            AppCompatCheckBox networkCB = findViewById(R.id.networkCheckbox);
+                            networkCB.setOnClickListener(ctx);
 
                             setFragment(new MenuFragment());
                         } else {
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         if (this._view != null)
-            this._view.onResume();
+            this._view.onPause();
         super.onPause();
     }
 
@@ -94,8 +97,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         // TODO - Add a preview type selection
-        boolean checked = ((AppCompatCheckBox) v).isChecked();
-        PreviewType p = this._currentPreviewType.contoursFlag(checked);
-        DBugNativeBridge.setPreviewType(p);
+
+        if (v.getId() == R.id.contoursCheckbox) {
+            boolean checked = ((AppCompatCheckBox) v).isChecked();
+            PreviewType p = this._currentPreviewType.contoursFlag(checked);
+            DBugNativeBridge.setPreviewType(p);
+        }
+
+        if (v.getId() == R.id.networkCheckbox) {
+            boolean checked = ((AppCompatCheckBox) v).isChecked();
+            DBugNativeBridge.setNetworkEnable(checked);
+        }
     }
 }

@@ -14,4 +14,5 @@
     <string name="show_contours">Show Contours</string>
     <string name="connected">Connected</string>
     <string name="not_connected">Not Connected</string>
+    <string name="send_data">Send data to RIO</string>
 </resources>
