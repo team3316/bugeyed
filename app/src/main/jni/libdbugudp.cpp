@@ -21,7 +21,7 @@ void sendMessage (std::string text) {
     address.sin_family = AF_INET;
     address.sin_port = htons(PORT);
 
-    if (inet_aton("192.168.1.25", &address.sin_addr) <= 0) {
+    if (inet_aton(ADDRESS, &address.sin_addr) <= 0) {
         LOGE("Invalid address / Address not supported");
         return;
     }

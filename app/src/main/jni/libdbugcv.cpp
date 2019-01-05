@@ -8,9 +8,12 @@
 #include <vector>
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
+
 #include "common.hpp"
-#include "libdbugcv.h"
 #include "libdbugudp.h"
+#include "libdbugtcp.h"
+
+#include "libdbugcv.h"
 
 using namespace cv;
 using namespace std;
@@ -23,6 +26,7 @@ static PreviewType ptype = CAMERA;
 static double horizontalFOV = ERROR_CONSTANT;
 static double verticalFOV = ERROR_CONSTANT;
 static bool shouldSendData = false;
+static MJPEGServer *server = NULL;
 
 // Taken from the iOS version
 bool shouldFilterContour(int numOfPoints, double area, double ratio, Polygon convex) {
@@ -155,6 +159,10 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     glBindTexture(GL_TEXTURE_2D, texOut);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, outputm.data);
 
+    if (server != NULL) {
+        server->writeFrame(outputm);
+    }
+
     LOGD("Found %lu contours", filtered.size());
 
     if (filtered.size() > 0 && shouldSendData) {
@@ -206,4 +214,11 @@ Java_com_team3316_bugeyed_DBugNativeBridge_setNetworkEnable(
     jboolean status
 ) {
     shouldSendData = (bool) status;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_team3316_bugeyed_DBugNativeBridge_initServer(JNIEnv *env, jclass type) {
+    server = new MJPEGServer();
+    server->initServer();
 }

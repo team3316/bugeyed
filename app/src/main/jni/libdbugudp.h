@@ -8,6 +8,7 @@
 #include <string>
 
 #define PORT 8080
+#define ADDRESS "192.168.1.25"
 
 void sendMessage (std::string text);
 

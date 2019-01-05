@@ -12,4 +12,5 @@ public class DBugNativeBridge {
     public static native void setPreviewType(PreviewType previewType);
     public static native void setFOVData(double horizontal, double vertical);
     public static native void setNetworkEnable(boolean status);
+    public static native void initServer();
 }
