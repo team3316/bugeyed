@@ -19,7 +19,7 @@ void sendMessage (std::string text) {
     }
 
     address.sin_family = AF_INET;
-    address.sin_port = htons(PORT);
+    address.sin_port = htons(RIO_PORT);
 
     if (inet_aton(ADDRESS, &address.sin_addr) <= 0) {
         LOGE("Invalid address / Address not supported");

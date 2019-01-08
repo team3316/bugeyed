@@ -25,5 +25,4 @@ target_link_libraries(
     EGL
     log
     m
-    pthread
 )
