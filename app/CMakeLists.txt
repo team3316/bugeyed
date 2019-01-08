@@ -14,7 +14,7 @@ add_library(
     SHARED
     src/main/jni/libdbugcv.cpp
     src/main/jni/libdbugudp.cpp
-    src/main/jni/libdbugtcp.cpp
+    src/main/jni/MJPEGWriter.cpp
 )
 
 target_link_libraries(
@@ -25,4 +25,5 @@ target_link_libraries(
     EGL
     log
     m
+    pthread
 )
