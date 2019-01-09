@@ -8,10 +8,11 @@
 #include <vector>
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
 
 #include "common.hpp"
 #include "libdbugudp.h"
-#include "MJPEGWriter.h"
+//#include "MJPEGWriter.h"
 
 #include "libdbugcv.h"
 
@@ -28,7 +29,7 @@ static PreviewType ptype = CAMERA;
 static double horizontalFOV = ERROR_CONSTANT;
 static double verticalFOV = ERROR_CONSTANT;
 static bool shouldSendData = false;
-static MJPEGWriter server(MJPEG_PORT);
+//static MJPEGWriter server(MJPEG_PORT);
 
 // Taken from the iOS version
 bool shouldFilterContour(int numOfPoints, double area, double ratio, Polygon convex) {
@@ -161,7 +162,10 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     glBindTexture(GL_TEXTURE_2D, texOut);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, outputm.data);
 
-    server.write(outputm);
+    vector<uchar> buf;
+    imencode(".jpeg", outputm, buf);
+
+//    server.write(outputm);
 
     LOGD("Found %lu contours", filtered.size());
 
@@ -219,14 +223,14 @@ Java_com_team3316_bugeyed_DBugNativeBridge_setNetworkEnable(
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_team3316_bugeyed_DBugNativeBridge_initServer(JNIEnv *env, jclass type) {
-    Mat frame;
-    server.write(frame);
-    server.start();
-    frame.release();
+//    Mat frame;
+//    server.write(frame);
+//    server.start();
+//    frame.release();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_team3316_bugeyed_DBugNativeBridge_stopServer(JNIEnv *env, jclass type) {
-    server.stop();
+//    server.stop();
 }

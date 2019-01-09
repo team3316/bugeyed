@@ -59,15 +59,15 @@ public abstract class BetterCameraGLRendererBase implements GLSurfaceView.Render
             1, 0};
     private final float texCoord2D[] = {
             // Landscape mode
-            0, 0,
-            0, 1,
-            1, 0,
-            1, 1};
+//            0, 0,
+//            0, 1,
+//            1, 0,
+//            1, 1};
     // Portrait mode
-            /*1, 0,
+            1, 0,
             0, 0,
             1, 1,
-            0, 1};*/
+            0, 1};
 
     private int[] texCamera = {0}, texFBO = {0}, texDraw = {0};
     private int[] FBO = {0};

@@ -26,7 +26,7 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
 
         settings.add(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
         settings.add(CaptureRequest.LENS_FOCUS_DISTANCE, 5.0f);
-        settings.add(CaptureRequest.SENSOR_EXPOSURE_TIME, 5 * 1000 * 1000L);
+        settings.add(CaptureRequest.SENSOR_EXPOSURE_TIME, 1000 * 1000L);
 
         return settings;
     }
