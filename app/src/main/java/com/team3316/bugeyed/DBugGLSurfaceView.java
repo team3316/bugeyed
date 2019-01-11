@@ -16,7 +16,7 @@ import org.opencv.android.BetterCameraGLSurfaceView;
 public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements BetterCameraGLSurfaceView.CameraTextureListener {
     private int _frameCounter = 0;
     private long _lastNanoTime;
-    private TextView _fpsTextView;
+    private TextView _fpsTextView, _distTextView;
 
     private static BetterCamera2Renderer.Settings getSettings() {
         BetterCamera2Renderer.Settings settings = new BetterCamera2Renderer.Settings();
@@ -85,6 +85,18 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
             vMax = DBugPreferences.getInstance().get("v-max-value", 255, false);
 
         DBugNativeBridge.processFrame(texOut, width, height, hMin, hMax, sMin, sMax, vMin, vMax);
+
+        if (this._distTextView != null) {
+            Runnable distUpdater = new Runnable() {
+                @Override
+                public void run() {
+                    _distTextView.setText("Dist: " + DBugNativeBridge.getDistanceToTarget());
+                }
+            };
+            new Handler(Looper.getMainLooper()).post(distUpdater);
+        } else {
+            this._distTextView = DBugUtils.unwrap(this.getContext()).findViewById(R.id.distanceTextView);
+        }
         return true;
     }
 }

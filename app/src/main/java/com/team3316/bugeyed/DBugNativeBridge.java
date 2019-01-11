@@ -11,6 +11,7 @@ public class DBugNativeBridge {
      */
     public static native void processFrame(int texOut, int width, int height, int hMin, int hMax,
                                            int sMin, int sMax, int vMin, int vMax);
+    public static native double getDistanceToTarget();
 
     public static native void setPreviewType(PreviewType previewType);
     public static native void setFOVData(double horizontal, double vertical);

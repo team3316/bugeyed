@@ -9,14 +9,12 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <math.h>
 
 #include "common.hpp"
 #include "libdbugudp.h"
-//#include "MJPEGWriter.h"
 
 #include "libdbugcv.h"
-
-#define MJPEG_PORT 3316 // TODO: Change to a permitted port
 
 using namespace cv;
 using namespace std;
@@ -28,16 +26,20 @@ using PolygonArray = vector<Polygon>;
 static PreviewType ptype = CAMERA;
 static double horizontalFOV = ERROR_CONSTANT;
 static double verticalFOV = ERROR_CONSTANT;
+static double distanceToTarget = ERROR_CONSTANT;
 static bool shouldSendData = false;
 //static MJPEGWriter server(MJPEG_PORT);
 
-// Taken from the iOS version
-bool shouldFilterContour(int numOfPoints, double area, double ratio, Polygon convex) {
+// Taken from the iOS version and changed
+bool shouldFilterContour(int numOfPoints, double area, double ratio, Polygon convex, double angle) {
     bool isInAreaRange = area >= MIN_CONTOUR_AREA && area <= MAX_CONTOUR_AREA;
     bool isInRatioRange = ratio >= MIN_HEIGHT_WIDTH_RATIO && ratio <= MAX_HEIGHT_WIDTH_RATIO;
+    bool isAngleInRange = abs(90 + angle - TARGET_ANGLE) < TARGET_EPSILON
+                       || abs(-angle - TARGET_ANGLE) < TARGET_EPSILON; // Angle should be either 14.5 or -14.5
     return isContourConvex(convex)
         && isInAreaRange
         && isInRatioRange
+        && isAngleInRange
         && numOfPoints >= 4;
 }
 
@@ -52,7 +54,7 @@ vector<RotatedRect> filterContours(PolygonArray contours) {
         double ratio = rect.boundingRect2f().height / rect.boundingRect2f().width;
         double area = contourArea(convex, false) / 100.0;
 
-        if (shouldFilterContour((int) convex.size(), area,  ratio, convex))
+        if (shouldFilterContour((int) convex.size(), area,  ratio, convex, rect.angle))
             filtered.push_back(rect);
     });
     return filtered;
@@ -60,6 +62,7 @@ vector<RotatedRect> filterContours(PolygonArray contours) {
 
 void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
     static Scalar green = Scalar(0.0, 255.0, 0.0, 255.0);
+    static Scalar red = Scalar(255.0, 0.0, 0.0, 255.0);
     static Scalar magenta = Scalar(255.0, 0.0, 255.0, 255.0);
     static Scalar blue = Scalar(0.0, 0.0, 255.0, 255.0);
 
@@ -69,7 +72,8 @@ void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
     };
     circle(output, center, 2, magenta);
 
-    for_each(filtered.begin(), filtered.end(), [&output, &center] (RotatedRect rect) {
+    int current = 0;
+    for_each(filtered.begin(), filtered.end(), [&output, &center, &current, &filtered] (RotatedRect rect) {
         Point2f vertices2f[4];
         rect.points(vertices2f);
 
@@ -78,14 +82,28 @@ void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
             vertices[i] = vertices2f[i];
         }
 
-        line(output, vertices[0], vertices[1], green);
-        line(output, vertices[1], vertices[2], green);
-        line(output, vertices[2], vertices[3], green);
-        line(output, vertices[3], vertices[0], green);
+        bool hasLeftAngle = abs(-rect.angle - TARGET_ANGLE) < TARGET_EPSILON;
+        Scalar color = hasLeftAngle ? green : red;
+        line(output, vertices[0], vertices[1], color);
+        line(output, vertices[1], vertices[2], color);
+        line(output, vertices[2], vertices[3], color);
+        line(output, vertices[3], vertices[0], color);
 
         circle(output, rect.center, 2, green);
 
         line(output, rect.center, center, blue);
+
+        if (current % 2 == 0 && current + 1 < filtered.size()) { // A new target
+            Point lastCenter = filtered[current + 1].center;
+            Point currentCenter = rect.center;
+            Point targetCenter = (lastCenter + currentCenter) / 2.0;
+
+            line(output, lastCenter, currentCenter, red);
+
+            circle(output, targetCenter, 3, green);
+        }
+
+        current++;
     });
 }
 
@@ -162,17 +180,16 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     glBindTexture(GL_TEXTURE_2D, texOut);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, outputm.data);
 
-//    vector<uchar> buf;
-//    imencode(".jpeg", outputm, buf);
-
-//    server.write(outputm);
-
     LOGD("Found %lu contours", filtered.size());
 
     if (filtered.size() > 0 && shouldSendData) {
         LOGD("Sending biggest contour's data");
         Point center = filtered[0].center;
         sendTargetData(center, width, height);
+
+        double distLeft = 2984.4 * pow(filtered[1].boundingRect2f().height, -0.889); // Interpolation
+        double distRight = 3126.9 * pow(filtered[0].boundingRect2f().height, -0.925); // Interpolation
+        distanceToTarget = (distLeft + distRight) / 2.0;
     }
 }
 
@@ -223,14 +240,17 @@ Java_com_team3316_bugeyed_DBugNativeBridge_setNetworkEnable(
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_team3316_bugeyed_DBugNativeBridge_initServer(JNIEnv *env, jclass type) {
-//    Mat frame;
-//    server.write(frame);
-//    server.start();
-//    frame.release();
+    LOGD("TODO - Implement mjpeg init server");
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_team3316_bugeyed_DBugNativeBridge_stopServer(JNIEnv *env, jclass type) {
-//    server.stop();
+    LOGD("TODO - Implement mjpeg stop server");
+}
+
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_team3316_bugeyed_DBugNativeBridge_getDistanceToTarget(JNIEnv *env, jclass type) {
+    return (jdouble) distanceToTarget;
 }

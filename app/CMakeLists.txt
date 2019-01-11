@@ -14,6 +14,7 @@ add_library(
     SHARED
     src/main/jni/libdbugcv.cpp
     src/main/jni/libdbugudp.cpp
+    src/main/jni/Target.cpp
 )
 
 target_link_libraries(

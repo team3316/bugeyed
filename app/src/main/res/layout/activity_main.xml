@@ -54,4 +54,13 @@
             android:text="@string/send_data"
             android:id="@+id/networkCheckbox" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/distanceTextView" />
 </FrameLayout>
