@@ -5,6 +5,7 @@
 #include <jni.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #include "common.hpp"
 
 #include "libdbugudp.h"
@@ -31,6 +32,11 @@ void sendMessage (std::string text) {
         return;
     }
 
-    send(sock, text.c_str(), text.size(), 0);
+    if (send(sock, text.c_str(), text.size(), 0) < 0) {
+        LOGE("Send error");
+        return;
+    }
+
     LOGD("Sent to server: %s", text.c_str());
+    close(sock);
 }
