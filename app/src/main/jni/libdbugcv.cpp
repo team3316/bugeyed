@@ -11,8 +11,9 @@
 #include <opencv2/imgcodecs.hpp>
 #include <math.h>
 
-#include "common.hpp"
+#include "common.h"
 #include "libdbugudp.h"
+#include "target.h"
 
 #include "libdbugcv.h"
 
@@ -219,11 +220,6 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
             break;
     }
 
-    // Some OpenGL magic to output the matrix back to the screen
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texOut);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, outputm.data);
-
     LOGD("Found %lu contours", filtered.size());
 
     if (filtered.size() > 1) { // A target has been recognized
@@ -232,12 +228,19 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
         int leftIndex = isLeftRect(filtered[0]) ? 0 : 1;
         RotatedRect leftRect = filtered[leftIndex], rightRect = filtered[~leftIndex];
 
+        LOGD("[DATA] Left height: %f, right height: %f", leftRect.boundingRect2f().height, rightRect.boundingRect2f().height);
+
         // Using x and cols because screen is rotated
         double targetCenterX = (leftRect.center.x + rightRect.center.x) / 2.0;
         double newDistance = abs(targetCenterX - (outputm.cols / 2.0));
 
         distanceToTarget = 500 > newDistance > 0 ? round(newDistance) : distanceToTarget;
     }
+
+    // Some OpenGL magic to output the matrix back to the screen
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texOut);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, outputm.data);
 }
 
 /**

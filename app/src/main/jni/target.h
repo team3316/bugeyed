@@ -11,8 +11,10 @@ using namespace cv;
 
 class Target {
 private:
-    RotatedRect *_leftRect;
-    RotatedRect *_rightRect;
+    RotatedRect _leftRect;
+    RotatedRect _rightRect;
+
+    Point2f _leftTop, _leftBottom, _rightTop, _rightBottom;
 
 public:
     Target(RotatedRect leftRect, RotatedRect rightRect);
@@ -20,6 +22,8 @@ public:
 
     RotatedRect getLeft();
     RotatedRect getRight();
+
+    void drawOnMat(Mat output, Scalar color);
 };
 
 

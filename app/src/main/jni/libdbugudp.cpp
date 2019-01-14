@@ -6,7 +6,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include "common.hpp"
+#include "common.h"
 
 #include "libdbugudp.h"
 
