@@ -37,6 +37,6 @@ void sendMessage (std::string text) {
         return;
     }
 
-    LOGD("Sent to server: %s", text.c_str());
+//    LOGD("Sent to server: %s", text.c_str());
     close(sock);
 }

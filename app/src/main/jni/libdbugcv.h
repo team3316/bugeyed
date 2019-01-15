@@ -14,6 +14,7 @@
 #define TARGET_EPSILON 4.5
 
 #define ERROR_CONSTANT -3316.0
+#define WPIFACTOR_MEASUREMENT_1M 10.3
 
 typedef enum {
     CAMERA,

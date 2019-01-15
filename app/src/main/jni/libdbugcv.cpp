@@ -130,35 +130,42 @@ void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
 }
 
 /**
- * Returns the angle of the camera from a given point on screen (used to get the angle from the target).
- * This is done by calculating the point's x or y dimension portion from the screen's width or height,
- * then multiplying by the respecting FOV angle (horizontal or vertical).
+ * Sends the target information to the RoboRIO through UDP (will probably be changed to TCP since ADB
+ * doesn't support datagram sockets).
  */
-double percentageOfAngle (double inner, double outer, double fov) {
-    double percentage = (inner / outer) - 0.5; // Percentage out of half of the screen
-    return percentage * fov;
-}
-
-// Uses power interpolation (aka kx^-m, where k and m are real)
-double calculateDistance (RotatedRect leftRect, RotatedRect rightRect) {
-    double distLeft = 2984.4 * pow(leftRect.boundingRect2f().height, -0.889);
-    double distRight = 3126.9 * pow(rightRect.boundingRect2f().height, -0.925);
-
-    double newDistance = (distLeft + distRight) / 2;
-    return newDistance > 400 ? distanceToTarget : newDistance; // Capping at 400 cm because it goes crazy
+void sendTargetData (double azimuth, double distance) {
+    string message = "[" + to_string(distance) + ", " + to_string(azimuth) + "]";
+    sendMessage(message);
 }
 
 /**
- * Sends the target information to the RoboRIO through UDP (will probably be changed to TCP since ADB
- * doesn't support datagram sockets). x axis uses height and y uses width since the axis are flipped
- * in portrait mode.
+ * Move the given point from top-left rotated frame coordinates to screen center coordinates.
  */
-void sendTargetData (Point centroid, int width, int height) {
-    double polar = percentageOfAngle(centroid.x, height, horizontalFOV);
-    double azimuth = percentageOfAngle(centroid.y, width, verticalFOV);
+Point2f normalizePoint (Point2f point, Point2f screenCenter) {
+    return {
+        point.y - screenCenter.y,
+        screenCenter.x - point.x
+    };
+}
 
-    string message = "[" + to_string(azimuth) + ", " + to_string(polar) + "]";
-    sendMessage(message);
+/**
+ * Calculates the distance from target, using a modified version of the calculations given here:
+ * http://firstinspires-shanghai.org/guide/technical-guide/Vision_Processing.pdf (calculations are called
+ * "wpi factor"). This has been modified by trial and error, and *not* in a logical, thought out
+ * way - DO NOT CHANGE!!! The calculations done by WPI make sense geometrically, but didn't match to
+ * the actual distance IRL so we tempered with them a bit.
+ *
+ * Calibration process:
+ *  1. Place the robot such that the phone is 1 meter ahead of the vision target.
+ *  2. Measure the calculated WPI factor and replace the current value of WPIFACTOR_MEASUREMENT_1M
+ *     with the measured one.
+ *  3. Have fun with your calibrated computer vision app!
+ */
+double wpiDistance (double width, RotatedRect rect) {
+    double fovRad = verticalFOV * PI / 180;
+    double wpiFactor = width / (2 * rect.boundingRect2f().height * tan(fovRad);
+    double factorToCm = 100 / WPIFACTOR_MEASUREMENT_1M;
+    return wpiFactor * factorToCm;
 }
 
 extern "C"
@@ -223,24 +230,31 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     LOGD("Found %lu contours", filtered.size());
 
     if (filtered.size() > 1) { // A target has been recognized
-        if (shouldSendData) sendTargetData(filtered[0].center, width, height); // Send the damn data
-
         int leftIndex = isLeftRect(filtered[0]) ? 0 : 1;
-        RotatedRect leftRect = filtered[leftIndex], rightRect = filtered[~leftIndex];
+        RotatedRect leftRect = filtered[leftIndex], rightRect = filtered[1 - leftIndex];
 
-        LOGD("[DATA] Left height: %f, right height: %f", leftRect.boundingRect2f().height, rightRect.boundingRect2f().height);
+        Point2f screenCenter = {
+            (float) outputm.cols / 2,
+            (float) outputm.rows / 2
+        };
 
-        // Using x and cols because screen is rotated
-        double targetCenterX = (leftRect.center.x + rightRect.center.x) / 2.0;
-        double newDistance = abs(targetCenterX - (outputm.cols / 2.0));
+        Point2f leftCenterNormalized = normalizePoint(leftRect.center, screenCenter);
+        Point2f rightCenterNormalized = normalizePoint(rightRect.center, screenCenter);
+        Point2f targetMidpoint = (leftCenterNormalized + rightCenterNormalized) / 2.0;
 
-        distanceToTarget = 500 > newDistance > 0 ? round(newDistance) : distanceToTarget;
+        double azimuthRad = atan2(targetMidpoint.y, targetMidpoint.x);
+        double azimuth = azimuthRad * 180 / PI;
+        distanceToTarget = (wpiDistance(width, leftRect) + wpiDistance(width, rightRect)) / 2.0;
+
+        if (shouldSendData) sendTargetData(azimuth, distanceToTarget);
     }
 
     // Some OpenGL magic to output the matrix back to the screen
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texOut);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, outputm.data);
+
+    outputm.release();
 }
 
 /**

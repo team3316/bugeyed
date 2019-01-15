@@ -8,7 +8,8 @@
 #include <string>
 
 #define RIO_PORT 8080
-#define ADDRESS "10.33.16.2"
+//#define ADDRESS "10.33.16.2"
+#define ADDRESS "172.16.0.85"
 
 void sendMessage (std::string text);
 
