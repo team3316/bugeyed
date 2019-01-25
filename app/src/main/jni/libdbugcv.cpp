@@ -9,7 +9,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <math.h>
+#include <cmath>
 
 #include "common.h"
 #include "libdbugudp.h"
@@ -168,6 +168,13 @@ double wpiDistance (double width, RotatedRect rect) {
     return wpiFactor * factorToCm;
 }
 
+/**
+ * Calculates the angle of the camera relative to the target.
+ */
+double relativeAngle (double x, double width) {
+    return 0.5 * (x / width) * horizontalFOV;
+}
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
@@ -242,11 +249,12 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
         Point2f rightCenterNormalized = normalizePoint(rightRect.center, screenCenter);
         Point2f targetMidpoint = (leftCenterNormalized + rightCenterNormalized) / 2.0;
 
-        double azimuthRad = atan2(targetMidpoint.y, targetMidpoint.x);
-        double azimuth = azimuthRad * 180 / PI;
         distanceToTarget = (wpiDistance(width, leftRect) + wpiDistance(width, rightRect)) / 2.0;
 
-        if (shouldSendData) sendTargetData(azimuth, distanceToTarget);
+        double width = norm(leftCenterNormalized - rightCenterNormalized);
+        double relAngle = relativeAngle(targetMidpoint.x, width);
+
+        if (shouldSendData) sendTargetData(relAngle, distanceToTarget);
     }
 
     // Some OpenGL magic to output the matrix back to the screen
