@@ -163,7 +163,7 @@ Point2f normalizePoint (Point2f point, Point2f screenCenter) {
  */
 double wpiDistance (double width, RotatedRect rect) {
     double fovRad = verticalFOV * PI / 180;
-    double wpiFactor = width / (2 * rect.boundingRect2f().height * tan(fovRad);
+    double wpiFactor = width / (2 * rect.boundingRect2f().height * tan(fovRad));
     double factorToCm = 100 / WPIFACTOR_MEASUREMENT_1M;
     return wpiFactor * factorToCm;
 }
