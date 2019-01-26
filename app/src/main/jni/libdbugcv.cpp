@@ -143,8 +143,8 @@ void sendTargetData (double azimuth, double distance) {
  */
 Point2f normalizePoint (Point2f point, Point2f screenCenter) {
     return {
-        point.y - screenCenter.y,
-        screenCenter.x - point.x
+        screenCenter.x - point.x,
+        point.y - screenCenter.y
     };
 }
 
@@ -162,7 +162,7 @@ Point2f normalizePoint (Point2f point, Point2f screenCenter) {
  *  3. Have fun with your calibrated computer vision app!
  */
 double wpiDistance (double width, RotatedRect rect) {
-    double fovRad = verticalFOV * PI / 180;
+    double fovRad = horizontalFOV * PI / 180;
     double wpiFactor = width / (2 * rect.boundingRect2f().height * tan(fovRad));
     double factorToCm = 100 / WPIFACTOR_MEASUREMENT_1M;
     return wpiFactor * factorToCm;
