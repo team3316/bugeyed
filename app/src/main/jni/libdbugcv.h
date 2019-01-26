@@ -6,7 +6,7 @@
 #define BUGEYED_LIBDBUGCV_H
 
 // Taken from the iOS version
-#define MIN_CONTOUR_AREA 5
+#define MIN_CONTOUR_AREA 0
 #define MAX_CONTOUR_AREA 300
 #define MIN_HEIGHT_WIDTH_RATIO 0
 #define MAX_HEIGHT_WIDTH_RATIO 4
