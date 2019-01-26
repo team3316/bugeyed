@@ -254,6 +254,8 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
         double width = norm(leftCenterNormalized - rightCenterNormalized);
         double relAngle = relativeAngle(targetMidpoint.x, width);
 
+        LOGD("[DATA] relTheta: %f", relAngle);
+
         if (shouldSendData) sendTargetData(relAngle, distanceToTarget);
     }
 
