@@ -14,7 +14,8 @@
 #define TARGET_EPSILON 4.5
 
 #define ERROR_CONSTANT -3316.0
-#define WPIFACTOR_MEASUREMENT_1M 10.54258733 // Updated on 26.01.2019 for camera height = ~108cm above ground
+// #define WPIFACTOR_MEASUREMENT_1M 10.54258733 // Vertical, distance to ground = ~108
+#define WPIFACTOR_MEASUREMENT_1M 2.693909833 // Horizontal, distance to ground = ~90
 
 typedef enum {
     CAMERA,
