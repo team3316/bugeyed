@@ -2,6 +2,7 @@ package com.team3316.bugeyed;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.hardware.camera2.CaptureRequest;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 
 import com.team3316.bugeyed.fragments.CalibrateFragment;
+import com.team3316.bugeyed.fragments.MatchVisionFragment;
 import com.team3316.bugeyed.fragments.MenuFragment;
 
 import net.ralphpina.permissionsmanager.PermissionsManager;
@@ -59,7 +61,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             AppCompatCheckBox networkCB = findViewById(R.id.networkCheckbox);
                             networkCB.setOnClickListener(ctx);
 
-                            setFragment(new MenuFragment());
+                            Intent intent = getIntent();
+
+                            if ("matchplay".equals(intent.getStringExtra("display"))) {
+                                setFragment(new MatchVisionFragment());
+                            } else {
+                                setFragment(new MenuFragment());
+                            }
                         } else {
                             setContentView(R.layout.activity_no_perm);
                         }
