@@ -218,26 +218,6 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     vector<RotatedRect> filtered = filterContours(contours); // Filter them
     cvtColor(threshed, threshedContours, CV_GRAY2RGBA); // Gray back to RGBA for display
 
-    switch (ptype) {
-        case CAMERA:
-            input.copyTo(outputm);
-            break;
-        case CAMERA_EXTRA:
-            drawRectsInMat(input, filtered);
-            input.copyTo(outputm);
-            break;
-        case THRESHOLDED:
-            threshedContours.copyTo(outputm);
-            break;
-        case CONTOURS:
-            drawRectsInMat(threshedContours, filtered);
-            threshedContours.copyTo(outputm);
-            break;
-        default:
-            input.copyTo(outputm);
-            break;
-    }
-
     LOGD("Found %lu contours", filtered.size());
 
     if (filtered.size() > 1) { // A target has been recognized
@@ -261,6 +241,26 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
         LOGD("[DATA] relTheta: %f", relAngle);
 
         if (shouldSendData) sendTargetData(relAngle, distanceToTarget);
+    }
+
+    switch (ptype) {
+        case CAMERA:
+            input.copyTo(outputm);
+            break;
+        case CAMERA_EXTRA:
+            drawRectsInMat(input, filtered);
+            input.copyTo(outputm);
+            break;
+        case THRESHOLDED:
+            threshedContours.copyTo(outputm);
+            break;
+        case CONTOURS:
+            drawRectsInMat(threshedContours, filtered);
+            threshedContours.copyTo(outputm);
+            break;
+        default:
+            input.copyTo(outputm);
+            break;
     }
 
     // Some OpenGL magic to output the matrix back to the screen
