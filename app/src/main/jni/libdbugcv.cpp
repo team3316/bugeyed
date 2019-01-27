@@ -142,9 +142,13 @@ void sendTargetData (double azimuth, double distance) {
  * Move the given point from top-left rotated frame coordinates to screen center coordinates.
  */
 Point2f normalizePoint (Point2f point, Point2f screenCenter) {
+//    return {
+//        screenCenter.x - point.x,
+//        point.y - screenCenter.y
+//    };
     return {
-        screenCenter.x - point.x,
-        point.y - screenCenter.y
+        screenCenter.x + point.x,
+        screenCenter.y - point.y
     };
 }
 
@@ -172,7 +176,7 @@ double wpiDistance (double width, RotatedRect rect) {
  * Calculates the angle of the camera relative to the target.
  */
 double relativeAngle (double x, double width) {
-    return 0.5 * (x / width) * horizontalFOV;
+    return ((x / width) - 0.5) * horizontalFOV;
 }
 
 extern "C"
@@ -251,8 +255,8 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
 
         distanceToTarget = (wpiDistance(width, leftRect) + wpiDistance(width, rightRect)) / 2.0;
 
-        double width = norm(leftCenterNormalized - rightCenterNormalized);
-        double relAngle = relativeAngle(targetMidpoint.x, width);
+        double targetCenterX = (leftRect.center.x + rightRect.center.x) / 2.0;
+        double relAngle = relativeAngle(targetCenterX, width);
 
         LOGD("[DATA] relTheta: %f", relAngle);
 

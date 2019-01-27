@@ -30,14 +30,6 @@ public class MatchVisionFragment extends Fragment {
         int notConnectedColor = ContextCompat.getColor(this.getContext(), R.color.not_connected);
         connectedButton.getBackground().setColorFilter(notConnectedColor, PorterDuff.Mode.DARKEN);
         connectedButton.setText(R.string.not_connected);
-
-        connectedButton.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Log.d(getClass().getSimpleName(), "onlongclick");
-                return true;
-            }
-        });
     }
 
     @Override
