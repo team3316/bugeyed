@@ -18,6 +18,8 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
     private long _lastNanoTime;
     private TextView _fpsTextView, _distTextView;
 
+    public static boolean shouldInit = false;
+
     private static BetterCamera2Renderer.Settings getSettings() {
         BetterCamera2Renderer.Settings settings = new BetterCamera2Renderer.Settings();
 
@@ -25,6 +27,8 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
         settings.height = 360;
 
         settings.add(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
+        settings.add(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
+        settings.add(CaptureRequest.LENS_OPTICAL_STABILIZATION_MODE, CaptureRequest.LENS_OPTICAL_STABILIZATION_MODE_OFF);
         settings.add(CaptureRequest.LENS_FOCUS_DISTANCE, 5.0f);
         settings.add(CaptureRequest.SENSOR_EXPOSURE_TIME, 1000 * 1000L);
 
@@ -77,12 +81,12 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
             this._lastNanoTime = System.nanoTime();
         }
 
-        int hMin = DBugPreferences.getInstance().get("h-min-value", 0, false),
-            hMax = DBugPreferences.getInstance().get("h-max-value", 255, false),
-            sMin = DBugPreferences.getInstance().get("s-min-value", 0, false),
-            sMax = DBugPreferences.getInstance().get("s-max-value", 255, false),
-            vMin = DBugPreferences.getInstance().get("v-min-value", 0, false),
-            vMax = DBugPreferences.getInstance().get("v-max-value", 255, false);
+        int hMin = DBugPreferences.getInstance().get("h-min-value", 0, shouldInit),
+            hMax = DBugPreferences.getInstance().get("h-max-value", 255, shouldInit),
+            sMin = DBugPreferences.getInstance().get("s-min-value", 0, shouldInit),
+            sMax = DBugPreferences.getInstance().get("s-max-value", 255, shouldInit),
+            vMin = DBugPreferences.getInstance().get("v-min-value", 0, shouldInit),
+            vMax = DBugPreferences.getInstance().get("v-max-value", 255, shouldInit);
 
         DBugNativeBridge.processFrame(texOut, width, height, hMin, hMax, sMin, sMax, vMin, vMax);
 

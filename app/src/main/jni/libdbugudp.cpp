@@ -10,13 +10,14 @@
 
 #include "libdbugudp.h"
 
-void sendMessage (std::string text) {
+bool sendMessage (std::string text) {
     struct sockaddr_in address;
     int sock = 0;
+    char buffer[30] = {'\0'};
 
-    if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         LOGE("Socket creation error");
-        return;
+        return false;
     }
 
     address.sin_family = AF_INET;
@@ -24,19 +25,26 @@ void sendMessage (std::string text) {
 
     if (inet_aton(ADDRESS, &address.sin_addr) <= 0) {
         LOGE("Invalid address / Address not supported");
-        return;
+        return false;
     }
 
     if (connect(sock, (struct sockaddr *) &address, sizeof(address)) < 0) {
         LOGE("Connection failed");
-        return;
+        return false;
     }
 
     if (send(sock, text.c_str(), text.size(), 0) < 0) {
         LOGE("Send error");
-        return;
+        return false;
     }
 
     LOGD("Sent to server: %s", text.c_str());
+//    if (recv(sock, buffer, sizeof(buffer), 0) < 0) {
+//        LOGE("Failed to read server message");
+//        return false;
+//    }
+
     close(sock);
+
+    return true;
 }

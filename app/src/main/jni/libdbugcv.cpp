@@ -29,7 +29,9 @@ static PreviewType ptype = CAMERA;
 static double horizontalFOV = ERROR_CONSTANT;
 static double verticalFOV = ERROR_CONSTANT;
 static double distanceToTarget = ERROR_CONSTANT;
+static double angleFromTarget = ERROR_CONSTANT;
 static bool shouldSendData = false;
+static bool connectionStatus = false; // Are we connected to the RIO?
 
 // Some constants
 // TODO - Move to header
@@ -43,7 +45,7 @@ static const Scalar green = Scalar(0.0, 255.0, 0.0, 255.0),
  * This is done using the fact that the left rectangle's angle is -14.5 (according to the manual).
  */
 bool isLeftRect (RotatedRect rect) {
-    return abs(-rect.angle - TARGET_ANGLE) < TARGET_EPSILON && abs(90 + rect.angle - TARGET_ANGLE) >= TARGET_EPSILON;
+    return 0 <= rect.angle && rect.angle <= 90;
 }
 
 /**
@@ -53,12 +55,9 @@ bool isLeftRect (RotatedRect rect) {
 bool shouldFilterContour(int numOfPoints, double area, double ratio, Polygon convex, double angle) {
     bool isInAreaRange = area >= MIN_CONTOUR_AREA && area <= MAX_CONTOUR_AREA;
     bool isInRatioRange = ratio >= MIN_HEIGHT_WIDTH_RATIO && ratio <= MAX_HEIGHT_WIDTH_RATIO;
-    bool isAngleInRange = abs(90 + angle - TARGET_ANGLE) < TARGET_EPSILON
-                       || abs(-angle - TARGET_ANGLE) < TARGET_EPSILON; // Angle should be either 14.5 or -14.5
     return isContourConvex(convex)
         && isInAreaRange
         && isInRatioRange
-        && isAngleInRange
         && numOfPoints >= 4;
 }
 
@@ -77,7 +76,7 @@ vector<RotatedRect> filterContours(PolygonArray contours) {
         double area = contourArea(convex, false) / 100.0;
 
         if (shouldFilterContour((int) convex.size(), area,  ratio, convex, rect.angle))
-            filtered.push_back(rect);
+            filtered.push_back(std::move(rect));
     });
     return filtered;
 }
@@ -133,9 +132,9 @@ void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
  * Sends the target information to the RoboRIO through UDP (will probably be changed to TCP since ADB
  * doesn't support datagram sockets).
  */
-void sendTargetData (double azimuth, double distance) {
+bool sendTargetData (double azimuth, double distance) {
     string message = "[" + to_string(distance) + ", " + to_string(azimuth) + "]";
-    sendMessage(message);
+    return sendMessage(message);
 }
 
 /**
@@ -223,6 +222,7 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
     if (filtered.size() > 1) { // A target has been recognized
         int leftIndex = isLeftRect(filtered[0]) ? 0 : 1;
         RotatedRect leftRect = filtered[leftIndex], rightRect = filtered[1 - leftIndex];
+        LOGD("[ANGLES] L: %f, R: %f", leftRect.angle, rightRect.angle);
 
         Point2f screenCenter = {
             (float) outputm.cols / 2,
@@ -232,15 +232,22 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
         Point2f leftCenterNormalized = normalizePoint(leftRect.center, screenCenter);
         Point2f rightCenterNormalized = normalizePoint(rightRect.center, screenCenter);
         Point2f targetMidpoint = (leftCenterNormalized + rightCenterNormalized) / 2.0;
-
-        distanceToTarget = (wpiDistance(width, leftRect) + wpiDistance(width, rightRect)) / 2.0;
-
         double targetCenterX = (leftRect.center.x + rightRect.center.x) / 2.0;
         double relAngle = relativeAngle(targetCenterX, width);
 
-        LOGD("[DATA] relTheta: %f", relAngle);
+        distanceToTarget = (wpiDistance(width, leftRect) + wpiDistance(width, rightRect)) / 2.0;
+        angleFromTarget = relAngle;
 
-        if (shouldSendData) sendTargetData(relAngle, distanceToTarget);
+        if (shouldSendData) {
+            connectionStatus = sendTargetData(relAngle, distanceToTarget);
+        }
+    } else { // No targets have been recognized; Send the ERROR_CONSTANT
+        distanceToTarget = ERROR_CONSTANT;
+        angleFromTarget = ERROR_CONSTANT;
+        if (shouldSendData) {
+            LOGD("Sending no data signal");
+            connectionStatus = sendTargetData(ERROR_CONSTANT, ERROR_CONSTANT);
+        }
     }
 
     switch (ptype) {
@@ -338,4 +345,16 @@ extern "C"
 JNIEXPORT jdouble JNICALL
 Java_com_team3316_bugeyed_DBugNativeBridge_getDistanceToTarget(JNIEnv *env, jclass type) {
     return (jdouble) distanceToTarget;
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_team3316_bugeyed_DBugNativeBridge_getConnectionStatus(JNIEnv *env, jclass type) {
+    return (jboolean) connectionStatus;
+}
+
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_team3316_bugeyed_DBugNativeBridge_getAngleFromTarget(JNIEnv *env, jclass type) {
+    return (jdouble) angleFromTarget;
 }
