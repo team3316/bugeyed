@@ -94,7 +94,7 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
             Runnable distUpdater = new Runnable() {
                 @Override
                 public void run() {
-                    _distTextView.setText("Dist: " + DBugNativeBridge.getDistanceToTarget());
+                    _distTextView.setText("Dist: " + DBugNativeBridge.getDistanceToTarget() + "\n\nAngle: " + DBugNativeBridge.getAngleFromTarget());
                 }
             };
             new Handler(Looper.getMainLooper()).post(distUpdater);

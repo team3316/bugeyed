@@ -12,7 +12,7 @@
 #include <cmath>
 
 #include "common.h"
-#include "libdbugudp.h"
+#include "libdbugnet.h"
 #include "target.h"
 
 #include "libdbugcv.h"
@@ -32,6 +32,7 @@ static double distanceToTarget = ERROR_CONSTANT;
 static double angleFromTarget = ERROR_CONSTANT;
 static bool shouldSendData = false;
 static bool connectionStatus = false; // Are we connected to the RIO?
+static Connection connection;
 
 // Some constants
 // TODO - Move to header
@@ -45,7 +46,8 @@ static const Scalar green = Scalar(0.0, 255.0, 0.0, 255.0),
  * This is done using the fact that the left rectangle's angle is -14.5 (according to the manual).
  */
 bool isLeftRect (RotatedRect rect) {
-    return 0 <= rect.angle && rect.angle <= 90;
+    double absAngle = abs(rect.angle);
+    return 0 <= absAngle && absAngle <= 45; // TODO - Need to calibrate!
 }
 
 /**
@@ -133,8 +135,10 @@ void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
  * doesn't support datagram sockets).
  */
 bool sendTargetData (double azimuth, double distance) {
-    string message = "[" + to_string(distance) + ", " + to_string(azimuth) + "]";
-    return sendMessage(message);
+    char message[1024] = {'\0'};
+    std::sprintf(message, "[%f, %f]\n", azimuth, distance);
+
+    return connection.sendData(message);
 }
 
 /**
@@ -327,6 +331,10 @@ Java_com_team3316_bugeyed_DBugNativeBridge_setNetworkEnable(
     jboolean status
 ) {
     shouldSendData = (bool) status;
+
+    if (!connection.isConnected()) connection.createSocket();
+    if (shouldSendData) connection.conn();
+    else connection.cls();
 }
 
 extern "C"

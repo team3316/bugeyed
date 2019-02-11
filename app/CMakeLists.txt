@@ -13,7 +13,7 @@ add_library(
     libdbugcv
     SHARED
     src/main/jni/libdbugcv.cpp
-    src/main/jni/libdbugudp.cpp
+    src/main/jni/libdbugnet.cpp
     src/main/jni/common.cpp
     src/main/jni/Target.cpp
 )

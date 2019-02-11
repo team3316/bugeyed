@@ -33,4 +33,32 @@ PointPair getRightPoints(cv::RotatedRect rect);
 cv::Point2f getBottomPoint(PointPair pair);
 cv::Point2f getTopPoint(PointPair pair);
 
+template<class T>
+class Optional {
+private:
+    T *value = NULL;
+
+    Optional() = default;
+    Optional(T val) {
+        memcpy(&val, this->value, sizeof(val));
+    }
+
+public:
+    static Optional ofValue(T val) {
+        return Optional(val);
+    }
+
+    static Optional empty() {
+        return Optional();
+    }
+
+    bool isEmpty() {
+        return this->value == NULL;
+    }
+
+    T get() {
+        return *this->value;
+    }
+};
+
 #endif //BUGEYED_COMMON_HPP
