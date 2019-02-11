@@ -1,7 +1,6 @@
 package com.team3316.bugeyed.fragments;
 
 import android.app.Fragment;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,12 +14,13 @@ import android.widget.CheckBox;
 
 import com.team3316.bugeyed.DBugGLSurfaceView;
 import com.team3316.bugeyed.DBugNativeBridge;
-import com.team3316.bugeyed.DBugRobotConnection;
 import com.team3316.bugeyed.MainActivity;
 import com.team3316.bugeyed.PreviewType;
 import com.team3316.bugeyed.R;
 
 public class MatchVisionFragment extends Fragment {
+    private boolean _shouldUpdateUI = true;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -39,7 +39,14 @@ public class MatchVisionFragment extends Fragment {
         Runnable updateUI = new Runnable() {
             @Override
             public void run() {
-                setConnectionState(view, DBugNativeBridge.getConnectionStatus());
+                while (_shouldUpdateUI) {
+                    try {
+                        setConnectionState(view, DBugNativeBridge.getConnectionStatus());
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         };
         (new Thread(updateUI)).start();
@@ -49,6 +56,7 @@ public class MatchVisionFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        this._shouldUpdateUI = true;
         ((MainActivity) this.getActivity()).setPreviewType(PreviewType.MATCH);
         DBugNativeBridge.setPreviewType(PreviewType.MATCH);
     }
@@ -56,6 +64,7 @@ public class MatchVisionFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        this._shouldUpdateUI = false;
     }
 
     private void setConnectionState(View view, boolean isConnected) {

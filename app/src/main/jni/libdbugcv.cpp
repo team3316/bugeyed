@@ -145,10 +145,6 @@ bool sendTargetData (double azimuth, double distance) {
  * Move the given point from top-left rotated frame coordinates to screen center coordinates.
  */
 Point2f normalizePoint (Point2f point, Point2f screenCenter) {
-//    return {
-//        screenCenter.x - point.x,
-//        point.y - screenCenter.y
-//    };
     return {
         screenCenter.x + point.x,
         screenCenter.y - point.y
