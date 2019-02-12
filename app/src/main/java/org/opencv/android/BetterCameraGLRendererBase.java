@@ -25,44 +25,44 @@ public abstract class BetterCameraGLRendererBase implements GLSurfaceView.Render
 
     // shaders
     private final String vss = ""
-            + "attribute vec2 vPosition;\n"
-            + "attribute vec2 vTexCoord;\n" + "varying vec2 texCoord;\n"
-            + "void main() {\n" + "  texCoord = vTexCoord;\n"
-            + "  gl_Position = vec4 ( vPosition.x, vPosition.y, 0.0, 1.0 );\n"
-            + "}";
+        + "attribute vec2 vPosition;\n"
+        + "attribute vec2 vTexCoord;\n" + "varying vec2 texCoord;\n"
+        + "void main() {\n" + "  texCoord = vTexCoord;\n"
+        + "  gl_Position = vec4 ( vPosition.x, vPosition.y, 0.0, 1.0 );\n"
+        + "}";
 
     private final String fssOES = ""
-            + "#extension GL_OES_EGL_image_external : require\n"
-            + "precision mediump float;\n"
-            + "uniform samplerExternalOES sTexture;\n"
-            + "varying vec2 texCoord;\n"
-            + "void main() {\n"
-            + "  gl_FragColor = texture2D(sTexture,texCoord);\n" + "}";
+        + "#extension GL_OES_EGL_image_external : require\n"
+        + "precision mediump float;\n"
+        + "uniform samplerExternalOES sTexture;\n"
+        + "varying vec2 texCoord;\n"
+        + "void main() {\n"
+        + "  gl_FragColor = texture2D(sTexture,texCoord);\n" + "}";
 
     private final String fss2D = ""
-            + "precision mediump float;\n"
-            + "uniform sampler2D sTexture;\n"
-            + "varying vec2 texCoord;\n"
-            + "void main() {\n"
-            + "  gl_FragColor = texture2D(sTexture,texCoord);\n" + "}";
+        + "precision mediump float;\n"
+        + "uniform sampler2D sTexture;\n"
+        + "varying vec2 texCoord;\n"
+        + "void main() {\n"
+        + "  gl_FragColor = texture2D(sTexture,texCoord);\n" + "}";
 
     // coord-s
     private final float vertices[] = {
-            -1, -1,
-            -1, 1,
-            1, -1,
-            1, 1};
+        -1, -1,
+        -1, 1,
+        1, -1,
+        1, 1};
     private final float texCoordOES[] = {
-            0, 1,
-            0, 0,
-            1, 1,
-            1, 0};
+        0, 1,
+        0, 0,
+        1, 1,
+        1, 0};
     private final float texCoord2D[] = {
-            // Landscape mode
-            0, 0,
-            0, 1,
-            1, 0,
-            1, 1};
+        // Landscape mode
+        0, 0,
+        0, 1,
+        1, 0,
+        1, 1};
     // Portrait mode
 //            1, 0,
 //            0, 0,

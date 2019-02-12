@@ -29,8 +29,11 @@ static inline int getTimeInterval(int64_t startTime) {
 
 // Point utility functions
 PointPair getLeftPoints(cv::RotatedRect rect);
+
 PointPair getRightPoints(cv::RotatedRect rect);
+
 cv::Point2f getBottomPoint(PointPair pair);
+
 cv::Point2f getTopPoint(PointPair pair);
 
 template<class T>
@@ -39,6 +42,7 @@ private:
     T *value = NULL;
 
     Optional() = default;
+
     Optional(T val) {
         memcpy(&val, this->value, sizeof(val));
     }

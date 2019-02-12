@@ -56,7 +56,8 @@ OptStr Connection::receive() {
 }
 
 bool Connection::isConnected() {
-    return this->_sockfd > 0; // This doesn't actually mean that it's connected but hey, it's something
+    return this->_sockfd >
+           0; // This doesn't actually mean that it's connected but hey, it's something
 }
 
 bool Connection::cls() {

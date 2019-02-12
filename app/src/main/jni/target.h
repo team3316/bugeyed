@@ -18,9 +18,11 @@ private:
 
 public:
     Target(RotatedRect leftRect, RotatedRect rightRect);
+
     ~Target() = default;
 
     RotatedRect getLeft();
+
     RotatedRect getRight();
 
     void drawOnMat(Mat output, Scalar color);

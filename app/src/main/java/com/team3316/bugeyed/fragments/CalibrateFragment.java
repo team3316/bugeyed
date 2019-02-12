@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CalibrateFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
-    private Map<Integer, String> _sliders = new HashMap<Integer, String>(){{
+    private Map<Integer, String> _sliders = new HashMap<Integer, String>() {{
         put(R.id.hMinSlide, "h-min");
         put(R.id.hMaxSlide, "h-max");
         put(R.id.sMinSlide, "s-min");
@@ -38,7 +38,7 @@ public class CalibrateFragment extends Fragment implements SeekBar.OnSeekBarChan
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         // Set the slider listeners to this context
-        for (Map.Entry<Integer, String> entry: this._sliders.entrySet()) {
+        for (Map.Entry<Integer, String> entry : this._sliders.entrySet()) {
             SeekBar bar = view.findViewById(entry.getKey());
             bar.setOnSeekBarChangeListener(this);
 
@@ -85,7 +85,7 @@ public class CalibrateFragment extends Fragment implements SeekBar.OnSeekBarChan
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.doneButton) {
-            for (Map.Entry<Integer, String> entry: this._sliders.entrySet()) {
+            for (Map.Entry<Integer, String> entry : this._sliders.entrySet()) {
                 SeekBar bar = this.getView().findViewById(entry.getKey());
                 DBugPreferences
                     .getInstance()

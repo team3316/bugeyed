@@ -24,9 +24,13 @@ private:
 
 public:
     bool conn();
+
     bool cls();
+
     bool sendData(char *str);
+
     bool isConnected();
+
     OptStr receive();
 
     void createSocket();

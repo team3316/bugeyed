@@ -45,7 +45,7 @@ static const Scalar green = Scalar(0.0, 255.0, 0.0, 255.0),
  * Detects whether a given rotated rectangle is the leftmost rectangle in a detected vision target.
  * This is done using the fact that the left rectangle's angle is -14.5 (according to the manual).
  */
-bool isLeftRect (RotatedRect rect) {
+bool isLeftRect(RotatedRect rect) {
     double absAngle = abs(rect.angle);
     return 0 <= absAngle && absAngle <= 45; // TODO - Need to calibrate!
 }
@@ -58,9 +58,9 @@ bool shouldFilterContour(int numOfPoints, double area, double ratio, Polygon con
     bool isInAreaRange = area >= MIN_CONTOUR_AREA && area <= MAX_CONTOUR_AREA;
     bool isInRatioRange = ratio >= MIN_HEIGHT_WIDTH_RATIO && ratio <= MAX_HEIGHT_WIDTH_RATIO;
     return isContourConvex(convex)
-        && isInAreaRange
-        && isInRatioRange
-        && numOfPoints >= 4;
+           && isInAreaRange
+           && isInRatioRange
+           && numOfPoints >= 4;
 }
 
 /**
@@ -69,7 +69,7 @@ bool shouldFilterContour(int numOfPoints, double area, double ratio, Polygon con
  */
 vector<RotatedRect> filterContours(PolygonArray contours) {
     vector<RotatedRect> filtered;
-    for_each(contours.begin(), contours.end(), [&filtered] (Polygon contour) {
+    for_each(contours.begin(), contours.end(), [&filtered](Polygon contour) {
         Polygon convex;
         convexHull(contour, convex);
         RotatedRect rect = minAreaRect(convex);
@@ -77,7 +77,7 @@ vector<RotatedRect> filterContours(PolygonArray contours) {
         double ratio = rect.boundingRect2f().height / rect.boundingRect2f().width;
         double area = contourArea(convex, false) / 100.0;
 
-        if (shouldFilterContour((int) convex.size(), area,  ratio, convex, rect.angle))
+        if (shouldFilterContour((int) convex.size(), area, ratio, convex, rect.angle))
             filtered.push_back(std::move(rect));
     });
     return filtered;
@@ -87,7 +87,7 @@ vector<RotatedRect> filterContours(PolygonArray contours) {
  * Draws a vector of filtered contours onto an output matrix. Done for visualization and debugging
  * purposes, will not be used during actual matchplay.
  */
-void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
+void drawRectsInMat(Mat output, vector<RotatedRect> filtered) {
     const Point center = {
         output.cols / 2,
         output.rows / 2
@@ -95,46 +95,47 @@ void drawRectsInMat (Mat output, vector<RotatedRect> filtered) {
     circle(output, center, 2, magenta);
 
     int current = 0;
-    for_each(filtered.begin(), filtered.end(), [&output, &center, &current, &filtered] (RotatedRect rect) {
-        Point2f vertices2f[4];
-        rect.points(vertices2f);
+    for_each(filtered.begin(), filtered.end(),
+             [&output, &center, &current, &filtered](RotatedRect rect) {
+                 Point2f vertices2f[4];
+                 rect.points(vertices2f);
 
-        Point vertices[4];
-        for (int i = 0; i < 4; i++) {
-            vertices[i] = vertices2f[i];
-        }
+                 Point vertices[4];
+                 for (int i = 0; i < 4; i++) {
+                     vertices[i] = vertices2f[i];
+                 }
 
-        Scalar color = isLeftRect(rect) ? red : green;
-        line(output, vertices[0], vertices[1], color);
-        line(output, vertices[1], vertices[2], color);
-        line(output, vertices[2], vertices[3], color);
-        line(output, vertices[3], vertices[0], color);
+                 Scalar color = isLeftRect(rect) ? red : green;
+                 line(output, vertices[0], vertices[1], color);
+                 line(output, vertices[1], vertices[2], color);
+                 line(output, vertices[2], vertices[3], color);
+                 line(output, vertices[3], vertices[0], color);
 
-        circle(output, rect.center, 2, green);
+                 circle(output, rect.center, 2, green);
 
-        line(output, rect.center, center, blue);
+                 line(output, rect.center, center, blue);
 
-        if (current % 2 == 0 && current + 1 < filtered.size()) { // A new target
-            Point lastCenter = filtered[current + 1].center;
-            Point currentCenter = rect.center;
-            Point targetCenter = (lastCenter + currentCenter) / 2;
+                 if (current % 2 == 0 && current + 1 < filtered.size()) { // A new target
+                     Point lastCenter = filtered[current + 1].center;
+                     Point currentCenter = rect.center;
+                     Point targetCenter = (lastCenter + currentCenter) / 2;
 
-            line(output, lastCenter, currentCenter, red);
+                     line(output, lastCenter, currentCenter, red);
 
-            line(output, center, targetCenter, red);
+                     line(output, center, targetCenter, red);
 
-            circle(output, targetCenter, 3, green);
-        }
+                     circle(output, targetCenter, 3, green);
+                 }
 
-        current++;
-    });
+                 current++;
+             });
 }
 
 /**
  * Sends the target information to the RoboRIO through UDP (will probably be changed to TCP since ADB
  * doesn't support datagram sockets).
  */
-bool sendTargetData (double azimuth, double distance) {
+bool sendTargetData(double azimuth, double distance) {
     char message[1024] = {'\0'};
     std::sprintf(message, "[%f, %f]\n", azimuth, distance);
 
@@ -144,7 +145,7 @@ bool sendTargetData (double azimuth, double distance) {
 /**
  * Move the given point from top-left rotated frame coordinates to screen center coordinates.
  */
-Point2f normalizePoint (Point2f point, Point2f screenCenter) {
+Point2f normalizePoint(Point2f point, Point2f screenCenter) {
     return {
         screenCenter.x + point.x,
         screenCenter.y - point.y
@@ -164,7 +165,7 @@ Point2f normalizePoint (Point2f point, Point2f screenCenter) {
  *     with the measured one.
  *  3. Have fun with your calibrated computer vision app!
  */
-double wpiDistance (double width, RotatedRect rect) {
+double wpiDistance(double width, RotatedRect rect) {
     double fovRad = horizontalFOV * PI / 180;
     double wpiFactor = width / (2 * rect.boundingRect2f().height * tan(fovRad));
     double factorToCm = 100 / WPIFACTOR_MEASUREMENT_1M;
@@ -174,7 +175,7 @@ double wpiDistance (double width, RotatedRect rect) {
 /**
  * Calculates the angle of the camera relative to the target.
  */
-double relativeAngle (double x, double width) {
+double relativeAngle(double x, double width) {
     return ((x / width) - 0.5) * horizontalFOV;
 }
 

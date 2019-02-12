@@ -11,6 +11,7 @@ public class DBugPreferences {
      * Singleton stuff
      */
     private static DBugPreferences _prefrences;
+
     public static DBugPreferences getInstance() {
         if (_prefrences == null)
             _prefrences = new DBugPreferences();

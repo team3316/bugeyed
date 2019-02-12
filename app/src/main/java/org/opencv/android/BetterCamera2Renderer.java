@@ -81,12 +81,12 @@ public class BetterCamera2Renderer extends BetterCameraGLRendererBase {
             return false;
         }
         CameraManager manager = (CameraManager) mView.getContext()
-                .getSystemService(Context.CAMERA_SERVICE);
+            .getSystemService(Context.CAMERA_SERVICE);
         try {
             CameraCharacteristics characteristics = manager
-                    .getCameraCharacteristics(mCameraID);
+                .getCameraCharacteristics(mCameraID);
             StreamConfigurationMap map = characteristics
-                    .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             int bestWidth = 0, bestHeight = 0;
             for (Size psize : map.getOutputSizes(SurfaceTexture.class)) {
                 int w = psize.getWidth(), h = psize.getHeight();
@@ -98,8 +98,8 @@ public class BetterCamera2Renderer extends BetterCameraGLRendererBase {
             }
             Log.i(LOGTAG, "best size: " + bestWidth + "x" + bestHeight);
             if (bestWidth == 0 || bestHeight == 0 ||
-                    mPreviewSize.getWidth() == bestWidth &&
-                            mPreviewSize.getHeight() == bestHeight)
+                mPreviewSize.getWidth() == bestWidth &&
+                    mPreviewSize.getHeight() == bestHeight)
                 return false;
             else {
                 mPreviewSize = new Size(bestWidth, bestHeight);
@@ -131,9 +131,9 @@ public class BetterCamera2Renderer extends BetterCameraGLRendererBase {
                 for (String cameraID : camList) {
                     CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraID);
                     if (id == CameraBridgeViewBase.CAMERA_ID_BACK &&
-                            characteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_BACK ||
-                            id == CameraBridgeViewBase.CAMERA_ID_FRONT &&
-                                    characteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT) {
+                        characteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_BACK ||
+                        id == CameraBridgeViewBase.CAMERA_ID_FRONT &&
+                            characteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT) {
                         mCameraID = cameraID;
                         break;
                     }
@@ -155,12 +155,12 @@ public class BetterCamera2Renderer extends BetterCameraGLRendererBase {
                 Log.d(LOGTAG, "Pixel array size: " + total_array_size);
                 int width_pixel_dim_actual = active_array_coords.width();
                 int width_pixel_dim_sensor = total_array_size.getWidth();
-                double width_ratio = (double)width_pixel_dim_actual / (double)width_pixel_dim_sensor;
+                double width_ratio = (double) width_pixel_dim_actual / (double) width_pixel_dim_sensor;
                 width_dim *= width_ratio;
                 Log.d(LOGTAG, "Actual width: " + width_dim);
                 int height_pixel_dim_actual = active_array_coords.height();
                 int height_pixel_dim_sensor = total_array_size.getHeight();
-                double height_ratio = (double)height_pixel_dim_actual / (double)height_pixel_dim_sensor;
+                double height_ratio = (double) height_pixel_dim_actual / (double) height_pixel_dim_sensor;
                 height_dim *= height_ratio;
                 Log.d(LOGTAG, "Actual height: " + height_dim);
 
@@ -191,7 +191,7 @@ public class BetterCamera2Renderer extends BetterCameraGLRendererBase {
 
                 if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                     throw new RuntimeException(
-                            "Time out waiting to lock camera opening.");
+                        "Time out waiting to lock camera opening.");
                 }
                 Log.i(LOGTAG, "Opening camera: " + mCameraID);
                 manager.openCamera(mCameraID, mStateCallback, mBackgroundHandler);
@@ -279,7 +279,7 @@ public class BetterCamera2Renderer extends BetterCameraGLRendererBase {
             Surface surface = new Surface(mSTexture);
 
             mPreviewRequestBuilder = mCameraDevice
-                    .createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+                .createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             mPreviewRequestBuilder.addTarget(surface);
 
             mCameraDevice.createCaptureSession(Arrays.asList(surface),
@@ -301,7 +301,7 @@ public class BetterCamera2Renderer extends BetterCameraGLRendererBase {
 
                     @Override
                     public void onConfigureFailed(
-                            CameraCaptureSession cameraCaptureSession) {
+                        CameraCaptureSession cameraCaptureSession) {
                         Log.e(LOGTAG, "createCameraPreviewSession failed");
                         mCameraOpenCloseLock.release();
                     }
@@ -310,7 +310,7 @@ public class BetterCamera2Renderer extends BetterCameraGLRendererBase {
             Log.e(LOGTAG, "createCameraPreviewSession");
         } catch (InterruptedException e) {
             throw new RuntimeException(
-                    "Interrupted while createCameraPreviewSession", e);
+                "Interrupted while createCameraPreviewSession", e);
         } finally {
             //mCameraOpenCloseLock.release();
         }

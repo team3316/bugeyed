@@ -12,12 +12,12 @@ public class DBugTarget {
         this._centerY = centerY;
     }
 
-    public double getAzimuthAngle () {
+    public double getAzimuthAngle() {
         double percentage = (this._centerX / this._frameWidth) - 0.5; // Percentage of the center from half of the image
         return percentage * HORIZONTAL_FOV;
     }
 
-    public double getPolarAngle () {
+    public double getPolarAngle() {
         double percentage = (this._centerY / this._frameHeight) - 0.5; // Percentage of the center from half of the image
         return percentage * VERTICAL_FOV;
     }

@@ -42,37 +42,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Permission handling
         final MainActivity ctx = this;
         PermissionsManager.get()
-                .requestCameraPermission()
-                .subscribe(new Action1<PermissionsResult>() {
-                    @Override
-                    public void call(PermissionsResult permissionsResult) {
-                        if (permissionsResult.isGranted()) {
-                            BetterCamera2Renderer.Settings settings = new BetterCamera2Renderer.Settings();
-                            settings.add(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
+            .requestCameraPermission()
+            .subscribe(new Action1<PermissionsResult>() {
+                @Override
+                public void call(PermissionsResult permissionsResult) {
+                    if (permissionsResult.isGranted()) {
+                        BetterCamera2Renderer.Settings settings = new BetterCamera2Renderer.Settings();
+                        settings.add(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
 
-                            setContentView(R.layout.activity_main);
+                        setContentView(R.layout.activity_main);
 
-                            _view = findViewById(R.id.cameraView);
-                            _view.setCameraTextureListener(_view);
+                        _view = findViewById(R.id.cameraView);
+                        _view.setCameraTextureListener(_view);
 
-                            AppCompatCheckBox contoursCB = findViewById(R.id.contoursCheckbox);
-                            contoursCB.setOnClickListener(ctx);
+                        AppCompatCheckBox contoursCB = findViewById(R.id.contoursCheckbox);
+                        contoursCB.setOnClickListener(ctx);
 
-                            AppCompatCheckBox networkCB = findViewById(R.id.networkCheckbox);
-                            networkCB.setOnClickListener(ctx);
+                        AppCompatCheckBox networkCB = findViewById(R.id.networkCheckbox);
+                        networkCB.setOnClickListener(ctx);
 
-                            Intent intent = getIntent();
+                        Intent intent = getIntent();
 
-                            if ("matchplay".equals(intent.getStringExtra("display"))) {
-                                setFragment(new MatchVisionFragment());
-                            } else {
-                                setFragment(new MenuFragment());
-                            }
+                        if ("matchplay".equals(intent.getStringExtra("display"))) {
+                            setFragment(new MatchVisionFragment());
                         } else {
-                            setContentView(R.layout.activity_no_perm);
+                            setFragment(new MenuFragment());
                         }
+                    } else {
+                        setContentView(R.layout.activity_no_perm);
                     }
-                });
+                }
+            });
     }
 
     @Override
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             transaction.addToBackStack(null);
     }
 
-    public void setPreviewType (PreviewType p) {
+    public void setPreviewType(PreviewType p) {
         this._currentPreviewType = p;
     }
 
