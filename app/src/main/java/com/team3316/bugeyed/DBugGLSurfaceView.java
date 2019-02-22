@@ -18,7 +18,7 @@ public class DBugGLSurfaceView extends BetterCameraGLSurfaceView implements Bett
     private long _lastNanoTime;
     private TextView _fpsTextView, _distTextView;
 
-    public static boolean shouldInit = false;
+    public static boolean shouldInit = true;
 
     private static BetterCamera2Renderer.Settings getSettings() {
         BetterCamera2Renderer.Settings settings = new BetterCamera2Renderer.Settings();

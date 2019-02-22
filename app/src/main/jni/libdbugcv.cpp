@@ -47,7 +47,7 @@ static const Scalar green = Scalar(0.0, 255.0, 0.0, 255.0),
  */
 bool isLeftRect(RotatedRect rect) {
     double absAngle = abs(rect.angle);
-    return 0 <= absAngle && absAngle <= 45; // TODO - Need to calibrate!
+    return 0 <= absAngle && absAngle <= 45; // TODO - Need to calibrate! (Looks pretty good though)
 }
 
 /**
@@ -75,7 +75,7 @@ vector<RotatedRect> filterContours(PolygonArray contours) {
         RotatedRect rect = minAreaRect(convex);
 
         double ratio = rect.boundingRect2f().height / rect.boundingRect2f().width;
-        double area = contourArea(convex, false) / 100.0;
+        double area = contourArea(convex, false);
 
         if (shouldFilterContour((int) convex.size(), area, ratio, convex, rect.angle))
             filtered.push_back(std::move(rect));
@@ -162,7 +162,8 @@ Point2f normalizePoint(Point2f point, Point2f screenCenter) {
  * Calibration process:
  *  1. Place the robot such that the phone is 1 meter ahead of the vision target.
  *  2. Measure the calculated WPI factor and replace the current value of WPIFACTOR_MEASUREMENT_1M
- *     with the measured one.
+ *     with the measured one (it is worth noting that so far the value that we calibrated in week 1
+ *     is still working to this day).
  *  3. Have fun with your calibrated computer vision app!
  */
 double wpiDistance(double width, RotatedRect rect) {
@@ -176,7 +177,7 @@ double wpiDistance(double width, RotatedRect rect) {
  * Calculates the angle of the camera relative to the target.
  */
 double relativeAngle(double x, double width) {
-    return ((x / width) - 0.5) * horizontalFOV;
+    return (x / width) * horizontalFOV;
 }
 
 extern "C"
@@ -226,14 +227,14 @@ Java_com_team3316_bugeyed_DBugNativeBridge_processFrame(
         LOGD("[ANGLES] L: %f, R: %f", leftRect.angle, rightRect.angle);
 
         Point2f screenCenter = {
-            (float) outputm.cols / 2,
-            (float) outputm.rows / 2
+            (float) width / 2.0f,
+            (float) height / 2.0f,
         };
 
         Point2f leftCenterNormalized = normalizePoint(leftRect.center, screenCenter);
         Point2f rightCenterNormalized = normalizePoint(rightRect.center, screenCenter);
         Point2f targetMidpoint = (leftCenterNormalized + rightCenterNormalized) / 2.0;
-        double targetCenterX = (leftRect.center.x + rightRect.center.x) / 2.0;
+        double targetCenterX = targetMidpoint.x - screenCenter.x - X_OFFSET;
         double relAngle = relativeAngle(targetCenterX, width);
 
         distanceToTarget = (wpiDistance(width, leftRect) + wpiDistance(width, rightRect)) / 2.0;

@@ -34,7 +34,7 @@ public class MatchVisionFragment extends Fragment {
         CheckBox netcb = this.getActivity().findViewById(R.id.networkCheckbox);
         netcb.setChecked(true);
         netcb.setEnabled(false);
-        netcb.callOnClick();
+        DBugNativeBridge.setNetworkEnable(true);
 
         Runnable updateUI = new Runnable() {
             @Override

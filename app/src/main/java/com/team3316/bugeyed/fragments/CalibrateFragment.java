@@ -69,7 +69,7 @@ public class CalibrateFragment extends Fragment implements SeekBar.OnSeekBarChan
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         String name = this._sliders.get(seekBar.getId());
-        DBugPreferences.getInstance().set(name + "-value", progress, false);
+        DBugPreferences.getInstance().set(name + "-value", progress, true);
     }
 
     @Override
